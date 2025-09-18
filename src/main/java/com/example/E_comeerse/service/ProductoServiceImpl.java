@@ -1,57 +1,86 @@
 package com.example.E_comeerse.service;
 
 import com.example.E_comeerse.model.Producto;
+import com.example.E_comeerse.repository.ProductoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Implementación de la interfaz ProductoService.
- * Se encarga de la lógica de negocio relacionada con productos.
- * Preparada para implementación con base de datos - sin almacenamiento en memoria.
- */
+   */
 @Service
 public class ProductoServiceImpl implements ProductoService {
 
-    /**
-     *
-     * Preparado para inyección de repositorio cuando se configure base de datos.
-     */
-    public ProductoServiceImpl() {
-        // Sin inicialización de almacenamiento en memoria
-        // Listo para trabajar con repositorio de base de datos
-    }
+    @Autowired
+    private ProductoRepository productoRepository;
 
-    /**
-     * Retorna la lista de todos los productos.
-     * TODO: Implementar con repositorio de base de datos.
-     * @return lista vacía temporalmente hasta configurar BD
-     */
     @Override
     public List<Producto> listarProductos() {
-        // TODO: Reemplazar con: return productoRepository.findAll();
-        return new ArrayList<>(); // Lista vacía hasta implementar BD
+        return productoRepository.findAll();
     }
 
-    /**
-     * Guarda un nuevo producto.
-     * TODO: Implementar con repositorio de base de datos.
-     * @param producto el producto a guardar
-     * @return el producto guardado
-     */
     @Override
     public Producto guardarProducto(Producto producto) {
-        // Validación básica
+        validarProducto(producto);
+        return productoRepository.save(producto);
+    }
+
+    @Override
+    public Optional<Producto> buscarPorId(Long id) {
+        return productoRepository.findById(id);
+    }
+
+    @Override
+    public Producto actualizarProducto(Long id, Producto producto) {
+        Optional<Producto> productoExistente = productoRepository.findById(id);
+        if (productoExistente.isEmpty()) {
+            throw new IllegalArgumentException("Producto no encontrado con ID: " + id);
+        }
+
+        validarProducto(producto);
+
+        Producto productoActualizar = productoExistente.get();
+        productoActualizar.setNombre(producto.getNombre());
+        productoActualizar.setDescripcion(producto.getDescripcion());
+        productoActualizar.setPrecio(producto.getPrecio());
+        productoActualizar.setCantidadStock(producto.getCantidadStock());
+        productoActualizar.setIdCategoria(producto.getIdCategoria());
+        productoActualizar.setCodigoProducto(producto.getCodigoProducto());
+        productoActualizar.setUrlImagen(producto.getUrlImagen());
+
+        return productoRepository.save(productoActualizar);
+    }
+
+    @Override
+    public void eliminarProducto(Long id) {
+        if (!productoRepository.existsById(id)) {
+            throw new IllegalArgumentException("Producto no encontrado con ID: " + id);
+        }
+        productoRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Producto> buscarPorCategoria(Long idCategoria) {
+        return productoRepository.findByIdCategoria(idCategoria);
+    }
+
+    @Override
+    public List<Producto> buscarPorNombre(String nombre) {
+        if (nombre == null || nombre.trim().isEmpty()) {
+            return List.of();
+        }
+        return productoRepository.findByNombreContainingIgnoreCase(nombre.trim());
+    }
+
+    private void validarProducto(Producto producto) {
         if (producto.getNombre() == null || producto.getNombre().trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del producto no puede estar vacío");
         }
-
-        // TODO: Reemplazar con: return productoRepository.save(producto);
-
-        // Simular guardado sin almacenar (retorna el mismo objeto)
-        // Esto es temporal hasta configurar la base de datos
-        producto.setId(1L); // ID temporal
-        return producto;
+        if (producto.getPrecio() == null || producto.getPrecio().compareTo(java.math.BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("El precio debe ser mayor a 0");
+        }
     }
 }

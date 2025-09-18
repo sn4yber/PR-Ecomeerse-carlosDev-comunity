@@ -2,73 +2,79 @@ package com.example.E_comeerse.controller;
 
 import com.example.E_comeerse.model.Producto;
 import com.example.E_comeerse.service.ProductoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-/**
- * Controlador REST para exponer endpoints relacionados con productos.
- * Permite consultar y crear productos en el sistema.
- */
 @RestController
 @RequestMapping("/api/productos")
+@CrossOrigin(origins = "*")
 public class ProductoController {
-    // Inyección del servicio de productos
+
     private final ProductoService productoService;
 
-    /**
-     * Constructor con inyección de dependencias.
-     * @param productoService servicio de productos
-     */
     @Autowired
     public ProductoController(ProductoService productoService) {
         this.productoService = productoService;
     }
 
-    /**
-     * Endpoint para obtener todos los productos.
-     * GET /api/productos
-     * @return lista de productos
-     */
     @GetMapping
-    public List<Producto> listarProductos() {
-        return productoService.listarProductos();
+    public ResponseEntity<List<Producto>> listarProductos() {
+        List<Producto> productos = productoService.listarProductos();
+        return ResponseEntity.ok(productos);
     }
 
-    /**
-     * Endpoint para crear un nuevo producto.
-     * POST /api/productos
-     * @param producto el producto a crear (enviado en el body de la petición)
-     * @return el producto creado con su ID generado
-     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Producto> obtenerProductoPorId(@PathVariable Long id) {
+        Optional<Producto> producto = productoService.buscarPorId(id);
+        return producto.map(ResponseEntity::ok)
+                      .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
-    public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto) {
+    public ResponseEntity<?> crearProducto(@Valid @RequestBody Producto producto) {
         try {
             Producto productoGuardado = productoService.guardarProducto(producto);
-            return new ResponseEntity<>(productoGuardado, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body(productoGuardado);
         } catch (IllegalArgumentException e) {
-            // Manejo básico de errores de validación
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    /**
-     * Endpoint para obtener un producto por ID.
-     * GET /api/productos/{id}
-     * @param id el ID del producto a buscar
-     * @return el producto encontrado o error 404
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<Producto> obtenerProducto(@PathVariable Long id) {
-        List<Producto> productos = productoService.listarProductos();
-        for (Producto producto : productos) {
-            if (producto.getId().equals(id)) {
-                return new ResponseEntity<>(producto, HttpStatus.OK);
-            }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizarProducto(@PathVariable Long id, @Valid @RequestBody Producto producto) {
+        try {
+            Producto productoActualizado = productoService.actualizarProducto(id, producto);
+            return ResponseEntity.ok(productoActualizado);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarProducto(@PathVariable Long id) {
+        try {
+            productoService.eliminarProducto(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/categoria/{idCategoria}")
+    public ResponseEntity<List<Producto>> obtenerProductosPorCategoria(@PathVariable Long idCategoria) {
+        List<Producto> productos = productoService.buscarPorCategoria(idCategoria);
+        return ResponseEntity.ok(productos);
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Producto>> buscarProductos(@RequestParam String nombre) {
+        List<Producto> productos = productoService.buscarPorNombre(nombre);
+        return ResponseEntity.ok(productos);
     }
 }

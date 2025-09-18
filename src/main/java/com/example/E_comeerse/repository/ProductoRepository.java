@@ -2,22 +2,26 @@ package com.example.E_comeerse.repository;
 
 import com.example.E_comeerse.model.Producto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Repositorio para la entidad Producto.
- * Extiende JpaRepository para obtener operaciones CRUD básicas automáticamente.
- *
- * Métodos disponibles automáticamente:
- * - findAll() - obtiene todos los productos
- * - save() - guarda un producto
- * - findById() - busca por ID
- * - deleteById() - elimina por ID
- * - count() - cuenta total de productos
  */
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
-    // Los métodos CRUD básicos están disponibles automáticamente
-    // Los otros integrantes pueden agregar métodos personalizados aquí
-    // Ejemplo: List<Producto> findByNombreContaining(String nombre);
+    // TODO: Agregar métodos personalizados aquí
+
+    List<Producto> findByIdCategoria(Long idCategoria);
+
+    @Query("SELECT p FROM Producto p WHERE LOWER(p.nombre) LIKE LOWER(CONCAT('%', :nombre, '%'))")
+    List<Producto> findByNombreContainingIgnoreCase(@Param("nombre") String nombre);
+
+    List<Producto> findByCodigoProducto(String codigoProducto);
+
+    @Query("SELECT p FROM Producto p WHERE p.cantidadStock > 0")
+    List<Producto> findProductosEnStock();
 }
