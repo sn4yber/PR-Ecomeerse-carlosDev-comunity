@@ -1,55 +1,48 @@
 import { useState } from 'react'
+import { Header } from './components/layout'
 
 function App() {
   const [count, setCount] = useState(0)
 
+  // Datos mínimos para el menú - solo lo esencial para probar el componente
+  const menuItems = [
+    { id: 'home', label: 'Inicio', href: '/' },
+    { id: 'products', label: 'Productos', href: '/productos' },
+    { id: 'cart', label: 'Carrito', href: '/carrito' }
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white text-center">
-          <h1 className="text-3xl font-bold mb-2">
-             Tailwind CSS v4
-          </h1>
-          <p className="text-blue-100">
-            ¡Funcionando perfectamente!
-          </p>
-        </div>
-        
-        <div className="p-8 text-center space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-2xl font-semibold text-gray-800">
+    <div className="min-h-screen bg-gray-50">
+      {/* Header con menú hamburguesa */}
+      <Header title="TiendaVirtual" menuItems={menuItems} />
+      
+      {/* Contenido principal - mantenemos el contador para verificar que todo funciona */}
+      <main className="container mx-auto px-4 py-8">
+        <div className="max-w-md mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="bg-gradient-to-r from-purple-600 to-black p-6 text-white text-center">
+            <h2 className="text-2xl font-bold mb-2">
               Contador de Prueba
             </h2>
-            <p className="text-gray-600">
-              React + TypeScript + Vite + Tailwind
+            <p className="text-purple-100">
+              Header funcionando!
             </p>
           </div>
           
-          <div className="bg-gray-50 rounded-lg p-6">
-            <div className="text-4xl font-bold text-indigo-600 mb-4">
-              {count}
+          <div className="p-8 text-center space-y-6">
+            <div className="bg-gray-50 rounded-lg p-6">
+              <div className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-black bg-clip-text text-transparent mb-4">
+                {count}
+              </div>
+              <button
+                onClick={() => setCount(count + 1)}
+                className="bg-gradient-to-r from-purple-600 to-black hover:from-purple-700 hover:to-gray-900 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transform transition duration-200 hover:scale-105 active:scale-95"
+              >
+                Incrementar
+              </button>
             </div>
-            <button
-              onClick={() => setCount(count + 1)}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transform transition duration-200 hover:scale-105 active:scale-95"
-            >
-              Incrementar
-            </button>
-          </div>
-          
-          <div className="flex gap-2 justify-center">
-            <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-              ✅ Tailwind
-            </span>
-            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-              ⚡ Vite
-            </span>
-            <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
-              ⚛️ React
-            </span>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   )
 }
