@@ -103,8 +103,15 @@ npm install
 
 #### Ejecutar Frontend en Desarrollo
 ```bash
+# Navegar al directorio del frontend y ejecutar en modo desarrollo
+cd /home/sn4yber/Descargas/E-comeerse/src/main/resources/static/front-tiendavirtal && npm run dev
+
+# O alternativamente:
+cd src/main/resources/static/front-tiendavirtal
 npm run dev
 ```
+
+> 📌 **Importante**: Siempre usar el comando completo con la ruta absoluta para ejecutar el frontend desde cualquier ubicación:
 
 #### Construir para Producción
 ```bash
