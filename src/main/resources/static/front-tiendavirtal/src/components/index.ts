@@ -9,3 +9,6 @@ export * from './layout';
 
 // UI components (para futuros componentes)
 
+
+// Page components
+export * from './pages';

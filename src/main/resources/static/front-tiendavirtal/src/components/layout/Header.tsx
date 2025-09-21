@@ -125,7 +125,7 @@ export const Header: React.FC<HeaderProps> = ({
                 text-xl font-semibold text-gray-900
                 sm:text-2xl md:text-3xl
                 truncate
-                group-hover:bg-gradient-to-r group-hover:from-purple-700 group-hover:to-black
+                group-hover:bg-gradient-to-r group-hover:from-purple-700 group-hover:to-gray-800
                 group-hover:bg-clip-text group-hover:text-transparent
                 transition-all duration-200
               ">
