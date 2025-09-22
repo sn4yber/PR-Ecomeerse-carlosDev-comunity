@@ -30,5 +30,20 @@ public class UsuarioService {
     public void eliminarUsuario(Long id){
         usuarioRepository.deleteById(id);
     }
+    
+    public boolean validarCredenciales(String nombreUsuario, String contrasena) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByNombreUsuario(nombreUsuario);
+        
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            // Comparar directamente las contraseñas (sin hash por simplicidad)
+            return contrasena.equals(usuario.getContrasena());
+        }
+        return false;
+    }
+    
+    public Optional<Usuario> buscarPorNombreUsuario(String nombreUsuario) {
+        return usuarioRepository.findByNombreUsuario(nombreUsuario);
+    }
 }
 

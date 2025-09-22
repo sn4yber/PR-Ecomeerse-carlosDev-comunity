@@ -31,3 +31,29 @@ export interface SidebarState {
   isOpen: boolean;
   activeItem?: string;
 }
+
+/**
+ * Información de contacto de la empresa
+ */
+export interface ContactInfo {
+  phone: string;
+  email: string;
+  address: string;
+  whatsapp?: string;
+}
+
+/**
+ * Enlace de navegación
+ */
+export interface FooterLink {
+  name: string;
+  href: string;
+}
+
+/**
+ * Sección del footer
+ */
+export interface FooterSection {
+  title: string;
+  links: FooterLink[];
+}

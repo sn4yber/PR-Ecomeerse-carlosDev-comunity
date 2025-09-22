@@ -5,7 +5,7 @@
  * @created 2025-09-20
  */
 
-import { Header, Home } from './components';
+import { Header, Home, Footer } from './components';
 import type { MenuItem } from './types';
 
 /**
@@ -43,15 +43,20 @@ const APP_CONFIG = {
  */
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Layout Header */}
       <Header 
         title={APP_CONFIG.title} 
         menuItems={APP_CONFIG.menuItems} 
       />
       
-      {/* Página principal */}
-      <Home />
+      {/* Contenido principal */}
+      <main className="flex-grow">
+        <Home />
+      </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
