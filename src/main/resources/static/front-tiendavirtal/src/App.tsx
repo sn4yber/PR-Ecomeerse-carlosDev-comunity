@@ -5,7 +5,11 @@
  * @created 2025-09-20
  */
 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Header, Home, Footer } from './components';
+import { Productos } from './components/pages/Productos';
+import { Carrito } from './components/pages/Carrito';
+import { Login } from './components/pages/Login';
 import type { MenuItem } from './types';
 
 /**
@@ -42,22 +46,38 @@ const APP_CONFIG = {
  * - Open/Closed: Extensible agregando nuevos componentes
  */
 function App() {
-  return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Layout Header */}
-      <Header 
-        title={APP_CONFIG.title} 
-        menuItems={APP_CONFIG.menuItems} 
-      />
-      
-      {/* Contenido principal */}
-      <main className="flex-grow">
-        <Home />
-      </main>
+  /**
+   * SISTEMA DE LOGIN PERSISTENTE - Para implementar después
+   * 
+   * Tip: useQuery(['authStatus']) para verificar token
+   * Tip: if (!authData?.authenticated) return <Login />;
+   */
 
-      {/* Footer */}
-      <Footer />
-    </div>
+  return (
+    <Router>
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        {/* Layout Header */}
+        <Header 
+          title={APP_CONFIG.title} 
+          menuItems={APP_CONFIG.menuItems} 
+        />
+        
+        {/* Contenido principal con rutas */}
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/productos" element={<Productos />} />
+            <Route path="/carrito" element={<Carrito />} />
+            <Route path="/login" element={<Login />} />
+            {/* Ruta por defecto - redirección al home */}
+            <Route path="*" element={<Home />} />
+          </Routes>
+        </main>
+
+        {/* Footer */}
+        <Footer />
+      </div>
+    </Router>
   );
 }
 

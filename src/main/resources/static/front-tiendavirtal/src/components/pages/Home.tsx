@@ -6,6 +6,8 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 
 /**
  * Props del componente Home
@@ -29,6 +31,20 @@ export interface HomeProps {
  * @param className - Clases CSS adicionales
  */
 export const Home: React.FC<HomeProps> = ({ className = "" }) => {
+  /**
+   * Hook useQuery para obtener productos del backend.
+   * El resultado se almacena en 'data', 'isLoading' y 'error'.
+   * El loading queda en stand by para integración grupal.
+   */
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['productos'],
+    queryFn: async () => {
+      const res = await fetch('http://localhost:8080/api/productos');
+      if (!res.ok) throw new Error('Error al obtener productos');
+      return res.json();
+    }
+  });
+
   return (
     <main className={`min-h-screen ${className}`}>
       {/* Hero Section Principal */}
@@ -40,16 +56,26 @@ export const Home: React.FC<HomeProps> = ({ className = "" }) => {
             <div className="space-y-8">
               <div className="space-y-4">
                 <h1 className="text-5xl lg:text-6xl font-bold text-gray-900">
-                  Bienvenido a <span className="bg-gradient-to-r from-purple-600 to-gray-800 bg-clip-text text-transparent">NebulaTech</span>.
+                  <span className="bg-gradient-to-r from-gray-900 to-purple-600 bg-clip-text text-transparent inline-block">
+                    Bienvenidos a NebulaTech
+                  </span>
                 </h1>
                 <p className="text-xl text-gray-600 max-w-md">
                   Encuentra lo que necesitas, para romper todos los límites.
                 </p>
               </div>
               
-              <button className="bg-gradient-to-r from-purple-600 to-gray-800 hover:from-purple-700 hover:to-gray-900 text-white px-8 py-4 font-semibold transition-all duration-200 hover:scale-105">
+              <Link 
+                to="/productos"
+                className="
+                  bg-gradient-to-r from-purple-600 to-gray-800 hover:from-purple-700 hover:to-gray-900 
+                  text-white px-8 py-4 font-semibold 
+                  transition-all duration-200 hover:scale-105
+                  inline-block no-underline
+                "
+              >
                 Ver Productos
-              </button>
+              </Link>
             </div>
 
             {/* Imagen del hero */}
@@ -114,6 +140,25 @@ export const Home: React.FC<HomeProps> = ({ className = "" }) => {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Ejemplo de renderizado de productos */}
+      <section className="py-8">
+        <h3 className="text-2xl font-bold mb-4">Productos Destacados</h3>
+        {/* El loading queda en stand by para integración grupal */}
+        {/* {isLoading && <p>Cargando productos...</p>} */}
+        {error && <p className="text-red-500">Error: {error.message}</p>}
+        {data && (
+          <ul className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {data.map((producto: any) => (
+              <li key={producto.id} className="border rounded p-4">
+                <h4 className="font-bold">{producto.nombre}</h4>
+                <p>{producto.descripcion}</p>
+                <span className="text-purple-600 font-semibold">${producto.precio}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </main>
   );

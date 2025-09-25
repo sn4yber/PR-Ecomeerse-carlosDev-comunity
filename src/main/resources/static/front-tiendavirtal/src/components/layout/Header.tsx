@@ -6,7 +6,27 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import type { HeaderProps } from '../../types';
+
+/**
+ * Icono de configuración/admin
+ */
+const AdminIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
+/**
+ * Icono de usuario/perfil
+ */
+const UserIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+  </svg>
+);
 
 /**
  * Icono de menú hamburguesa
@@ -46,6 +66,14 @@ export const Header: React.FC<HeaderProps> = ({
   className = "" 
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  // Estado temporal para el login (después se integrará con el sistema de autenticación)
+  // Por ahora siempre invitado, los botones redirigen a las páginas correspondientes
+  const [isLoggedIn] = useState(false);
+  const [userProfile] = useState({
+    name: 'Usuario Invitado',
+    role: 'guest', // 'admin', 'user', 'guest'
+    avatar: null
+  });
 
   /**
    * Alternar el estado del sidebar
@@ -109,18 +137,22 @@ export const Header: React.FC<HeaderProps> = ({
             <MenuIcon className="w-6 h-6 text-gray-700" />
           </button>
 
-          {/* Título centrado como botón transparente */}
+          {/* Título centrado como Link */}
           <div className="flex-1 flex justify-center">
-            <button className="
-              px-6 py-2 rounded-lg
-              bg-transparent 
-              hover:bg-gradient-to-r hover:from-purple-100 hover:to-gray-100
-              active:bg-gradient-to-r active:from-purple-200 active:to-gray-200
-              border border-transparent hover:border-purple-300
-              transition-all duration-200
-              focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
-              group
-            ">
+            <Link 
+              to="/"
+              className="
+                px-6 py-2 rounded-lg
+                bg-transparent 
+                hover:bg-gradient-to-r hover:from-purple-100 hover:to-gray-100
+                active:bg-gradient-to-r active:from-purple-200 active:to-gray-200
+                border border-transparent hover:border-purple-300
+                transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+                group
+                no-underline
+              "
+            >
               <h1 className="
                 text-xl font-semibold text-gray-900
                 sm:text-2xl md:text-3xl
@@ -131,11 +163,21 @@ export const Header: React.FC<HeaderProps> = ({
               ">
                 {title}
               </h1>
-            </button>
+            </Link>
           </div>
 
-          {/* Espacio para mantener el centrado (igual al botón hamburguesa) */}
-          <div className="w-10 h-10" />
+          {/* Botón de usuario/perfil */}
+          <button className="
+            flex items-center justify-center w-10 h-10 rounded-lg
+            hover:bg-gradient-to-br hover:from-purple-100 hover:to-gray-100
+            active:bg-gradient-to-br active:from-purple-200 active:to-gray-200
+            transition-all duration-200
+            focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+          "
+          aria-label="Perfil de usuario"
+          >
+            <UserIcon className="w-6 h-6 text-gray-700" />
+          </button>
         </div>
       </header>
 
@@ -181,12 +223,99 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </div>
 
+        {/* Sección de Perfil de Usuario */}
+        <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+          <div className="flex items-center space-x-3">
+            {/* Avatar/Icono de usuario */}
+            <div className="
+              flex items-center justify-center w-12 h-12 rounded-full
+              bg-gradient-to-br from-purple-100 to-gray-100
+              border-2 border-gray-200
+            ">
+              <UserIcon className="w-6 h-6 text-purple-600" />
+            </div>
+            
+            {/* Información del usuario */}
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-semibold text-gray-900 truncate">
+                {userProfile.name}
+              </div>
+              <div className="text-xs text-gray-500 capitalize">
+                {userProfile.role === 'guest' ? 'Invitado' : 
+                 userProfile.role === 'admin' ? 'Administrador' : 'Usuario'}
+              </div>
+            </div>
+
+            {/* Indicador de estado */}
+            <div className={`
+              w-3 h-3 rounded-full
+              ${isLoggedIn ? 'bg-green-400' : 'bg-gray-400'}
+            `} />
+          </div>
+
+          {/* Botones de acción */}
+          <div className="mt-3 space-y-2">
+            {!isLoggedIn ? (
+              <div className="space-y-2">
+                <Link 
+                  to="/login"
+                  onClick={closeSidebar}
+                  className="
+                    w-full px-3 py-2 text-sm font-medium text-white
+                    bg-gradient-to-r from-purple-600 to-gray-800
+                    hover:from-purple-700 hover:to-gray-900
+                    rounded-lg transition-all duration-200
+                    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+                    block text-center no-underline
+                  "
+                >
+                  Iniciar Sesión
+                </Link>
+                <button className="
+                  w-full px-3 py-2 text-sm font-medium text-gray-700
+                  border border-gray-300 hover:bg-gray-50
+                  rounded-lg transition-all duration-200
+                  focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+                ">
+                  Registrarse
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {userProfile.role === 'admin' && (
+                  <button className="
+                    w-full px-3 py-2 text-sm font-medium text-white
+                    bg-gradient-to-r from-purple-600 to-gray-800
+                    hover:from-purple-700 hover:to-gray-900
+                    rounded-lg transition-all duration-200
+                    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+                    flex items-center justify-center space-x-2
+                  ">
+                    <AdminIcon className="w-4 h-4" />
+                    <span>Panel de Admin</span>
+                  </button>
+                )}
+                <button 
+                  className="
+                    w-full px-3 py-2 text-sm font-medium text-gray-700
+                    border border-gray-300 hover:bg-gray-50
+                    rounded-lg transition-all duration-200
+                    focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+                  "
+                >
+                  Cerrar Sesión
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Contenido del sidebar */}
         <nav className="p-4 space-y-2 overflow-y-auto max-h-full">
           {menuItems.map((item) => (
-            <a
+            <Link
               key={item.id}
-              href={item.href}
+              to={item.href}
               className="
                 flex items-center px-4 py-3 text-gray-700 
                 hover:bg-gradient-to-r hover:from-purple-50 hover:to-gray-50
@@ -195,6 +324,7 @@ export const Header: React.FC<HeaderProps> = ({
                 rounded-lg transition-all duration-200
                 border-l-4 border-transparent hover:border-purple-500
                 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+                no-underline
               "
               onClick={closeSidebar}
             >
@@ -204,7 +334,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               )}
               <span className="font-medium">{item.label}</span>
-            </a>
+            </Link>
           ))}
         </nav>
 
