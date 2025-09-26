@@ -166,18 +166,21 @@ export const Header: React.FC<HeaderProps> = ({
             </Link>
           </div>
 
-          {/* Botón de usuario/perfil */}
-          <button className="
-            flex items-center justify-center w-10 h-10 rounded-lg
-            hover:bg-gradient-to-br hover:from-purple-100 hover:to-gray-100
-            active:bg-gradient-to-br active:from-purple-200 active:to-gray-200
-            transition-all duration-200
-            focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
-          "
-          aria-label="Perfil de usuario"
+          {/* Botón de usuario/perfil - Redirecciona al login */}
+          <Link 
+            to="/login"
+            className="
+              flex items-center justify-center w-10 h-10 rounded-lg
+              hover:bg-gradient-to-br hover:from-purple-100 hover:to-gray-100
+              active:bg-gradient-to-br active:from-purple-200 active:to-gray-200
+              transition-all duration-200
+              focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+              no-underline
+            "
+            aria-label="Ir al login"
           >
             <UserIcon className="w-6 h-6 text-gray-700" />
-          </button>
+          </Link>
         </div>
       </header>
 

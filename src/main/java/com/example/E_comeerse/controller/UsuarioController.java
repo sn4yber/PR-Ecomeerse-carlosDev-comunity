@@ -47,7 +47,7 @@ public class UsuarioController {
         Optional<Usuario> usuarioExistente = usuarioService.obtenerUsuarioPorId(id);
         if (usuarioExistente.isPresent()) {
             try {
-                usuario.setId(id);
+                usuario.setIdUsuario(id);
                 Usuario usuarioActualizado = usuarioService.guardarUsuario(usuario);
                 return ResponseEntity.ok(usuarioActualizado);
             } catch (IllegalArgumentException e) {
