@@ -1,6 +1,6 @@
 /**
  * @fileoverview Componente Header principal del e-commerce
- * @description Header con menú hamburguesa lateral estilo Wikipedia y título centrado
+ * @description Header con menú hamburguesa lateral estilo Wikipedia con título centrado
  * @author E-commerce Team
  * @created 2025-09-20
  */
@@ -16,6 +16,15 @@ const AdminIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) 
   <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
+/**
+ * Icono de carrito de compras
+ */
+const CartIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 7H19m-8-7V9a3 3 0 116 0v4m-6 0v7" />
   </svg>
 );
 
@@ -62,7 +71,6 @@ const CloseIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) 
  */
 export const Header: React.FC<HeaderProps> = ({ 
   title, 
-  menuItems, 
   className = "" 
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -166,21 +174,40 @@ export const Header: React.FC<HeaderProps> = ({
             </Link>
           </div>
 
-          {/* Botón de usuario/perfil - Redirecciona al login */}
-          <Link 
-            to="/login"
-            className="
-              flex items-center justify-center w-10 h-10 rounded-lg
-              hover:bg-gradient-to-br hover:from-purple-100 hover:to-gray-100
-              active:bg-gradient-to-br active:from-purple-200 active:to-gray-200
-              transition-all duration-200
-              focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
-              no-underline
-            "
-            aria-label="Ir al login"
-          >
-            <UserIcon className="w-6 h-6 text-gray-700" />
-          </Link>
+          {/* Botones de acción */}
+          <div className="flex items-center space-x-2">
+            {/* Botón de carrito */}
+            <Link 
+              to="/carrito"
+              className="
+                flex items-center justify-center w-10 h-10 rounded-lg
+                hover:bg-gradient-to-br hover:from-purple-100 hover:to-gray-100
+                active:bg-gradient-to-br active:from-purple-200 active:to-gray-200
+                transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+                no-underline
+              "
+              aria-label="Ir al carrito"
+            >
+              <CartIcon className="w-6 h-6 text-gray-700" />
+            </Link>
+            
+            {/* Botón de usuario/perfil - Redirecciona al login */}
+            <Link 
+              to="/login"
+              className="
+                flex items-center justify-center w-10 h-10 rounded-lg
+                hover:bg-gradient-to-br hover:from-purple-100 hover:to-gray-100
+                active:bg-gradient-to-br active:from-purple-200 active:to-gray-200
+                transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+                no-underline
+              "
+              aria-label="Ir al login"
+            >
+              <UserIcon className="w-6 h-6 text-gray-700" />
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -199,7 +226,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Sidebar lateral estilo Wikipedia */}
       <aside className={`
         fixed top-0 left-0 h-full w-80 bg-white shadow-xl z-50
-        transform transition-transform duration-300 ease-in-out
+        transform transition-all duration-300 ease-in-out
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
         border-r border-gray-200
       `}>
@@ -257,7 +284,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Botones de acción */}
-          <div className="mt-3 space-y-2">
+          <div className="mt-3 space-y-2">            
             {!isLoggedIn ? (
               <div className="space-y-2">
                 <Link 
@@ -301,7 +328,8 @@ export const Header: React.FC<HeaderProps> = ({
                 <button 
                   className="
                     w-full px-3 py-2 text-sm font-medium text-gray-700
-                    border border-gray-300 hover:bg-gray-50
+                    border border-gray-300 
+                    hover:bg-gray-50
                     rounded-lg transition-all duration-200
                     focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
                   "
@@ -314,37 +342,45 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Contenido del sidebar */}
-        <nav className="p-4 space-y-2 overflow-y-auto max-h-full">
-          {menuItems.map((item) => (
+        <div className="p-4 h-full overflow-y-auto bg-white">
+          <nav className="space-y-1">
             <Link
-              key={item.id}
-              to={item.href}
-              className="
-                flex items-center px-4 py-3 text-gray-700 
-                hover:bg-gradient-to-r hover:from-purple-50 hover:to-gray-50
-                hover:text-purple-800
-                active:bg-gradient-to-r active:from-purple-100 active:to-gray-100
-                rounded-lg transition-all duration-200
-                border-l-4 border-transparent hover:border-purple-500
-                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
-                no-underline
-              "
+              to="/"
               onClick={closeSidebar}
+              className="
+                block px-3 py-2 rounded-md text-sm font-medium
+                text-gray-700 hover:text-purple-600
+                hover:bg-gradient-to-r hover:from-purple-50 hover:to-gray-50
+                transition-all duration-200 border-l-2 border-transparent
+                hover:border-purple-500 hover:shadow-sm
+                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+              "
             >
-              {item.icon && (
-                <span className="mr-3 text-lg" role="img" aria-hidden="true">
-                  {item.icon}
-                </span>
-              )}
-              <span className="font-medium">{item.label}</span>
+              🏠 Inicio
             </Link>
-          ))}
-        </nav>
+            
+            <Link
+              to="/productos"
+              onClick={closeSidebar}
+              className="
+                block px-3 py-2 rounded-md text-sm font-medium
+                text-gray-700 hover:text-purple-600
+                hover:bg-gradient-to-r hover:from-purple-50 hover:to-gray-50
+                transition-all duration-200 border-l-2 border-transparent
+                hover:border-purple-500 hover:shadow-sm
+                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+              "
+            >
+              🛍️ Productos
+            </Link>
+          </nav>
+        </div>
 
         {/* Footer del sidebar */}
         <div className="
           absolute bottom-0 left-0 right-0 p-4 
-          border-t border-gray-200 bg-gray-50
+          border-t border-gray-200 
+          bg-gray-50
         ">
           <p className="text-sm text-gray-500 text-center">
             E-commerce v1.0

@@ -130,7 +130,14 @@ export function Footer({
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-gradient-to-b from-gray-100 to-gray-200 text-gray-700 border-t border-gray-300">
+    <footer className="
+      bg-gradient-to-b from-gray-100 to-gray-200 
+      dark:from-gray-800 dark:to-gray-900
+      text-gray-700 dark:text-gray-300 
+      border-t border-gray-300 dark:border-gray-700
+      transition-colors duration-200
+    "
+    >
       {/* Contenido principal del footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -138,41 +145,53 @@ export function Footer({
           {/* Información de contacto */}
           {showContact && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
                 Contacto
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
-                  <svg className="w-5 h-5 text-purple-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
-                  <span className="text-gray-600">{finalContactInfo.phone}</span>
+                  <span className="text-gray-600 dark:text-gray-400">{finalContactInfo.phone}</span>
                 </div>
                 
                 <div className="flex items-center space-x-3">
-                  <svg className="w-5 h-5 text-purple-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                   <a 
                     href={`mailto:${finalContactInfo.email}`}
-                    className="text-gray-600 hover:text-purple-700 transition-colors"
+                    className="
+                      text-gray-600 dark:text-gray-400 
+                      hover:text-purple-700 dark:hover:text-purple-300 
+                      transition-colors
+                    "
                   >
                     {finalContactInfo.email}
                   </a>
                 </div>
 
                 <div className="flex items-start space-x-3">
-                  <svg className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
-                  <span className="text-gray-600">{finalContactInfo.address}</span>
+                  <span className="text-gray-600 dark:text-gray-400">{finalContactInfo.address}</span>
                 </div>
 
                 {/* Botón de WhatsApp */}
                 <a
                   href={`https://wa.me/${finalContactInfo.whatsapp?.replace(/\+|\s/g, '')}`}
-                  className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="
+                    inline-flex items-center space-x-2 
+                    bg-gradient-to-r from-green-600 to-green-700 
+                    hover:from-green-700 hover:to-green-800 
+                    dark:from-green-500 dark:to-green-600
+                    dark:hover:from-green-600 dark:hover:to-green-700
+                    text-white px-4 py-2 rounded-lg 
+                    transition-all duration-200 shadow-sm hover:shadow-md
+                  "
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -188,7 +207,7 @@ export function Footer({
           {/* Secciones de navegación */}
           {sections.map((section) => (
             <div key={section.title} className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
                 {section.title}
               </h3>
               <ul className="space-y-2">
@@ -196,7 +215,13 @@ export function Footer({
                   <li key={link.name}>
                     <a
                       href={link.href}
-                      className="text-gray-600 hover:text-purple-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-gray-50 px-2 py-1 rounded transition-all duration-200"
+                      className="
+                        text-gray-600 dark:text-gray-400
+                        hover:text-purple-700 dark:hover:text-purple-300 
+                        hover:bg-gradient-to-r hover:from-purple-50 hover:to-gray-50
+                        dark:hover:from-purple-900 dark:hover:to-gray-800
+                        px-2 py-1 rounded transition-all duration-200
+                      "
                     >
                       {link.name}
                     </a>
@@ -209,24 +234,35 @@ export function Footer({
       </div>
 
       {/* Sección inferior: Copyright y redes sociales */}
-      <div className="border-t border-gray-300 bg-gradient-to-b from-gray-200 to-gray-300">
+      <div className="
+        border-t border-gray-300 dark:border-gray-700 
+        bg-gradient-to-b from-gray-200 to-gray-300
+        dark:from-gray-900 dark:to-gray-950
+        transition-colors duration-200
+      ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             {/* Copyright */}
-            <div className="text-gray-600 text-sm">
+            <div className="text-gray-600 dark:text-gray-400 text-sm">
               © {currentYear} NebulaTech. Todos los derechos reservados.
             </div>
 
             {/* Redes sociales */}
             {showSocial && (
               <div className="flex items-center space-x-6">
-                <span className="text-gray-600 text-sm">Síguenos:</span>
+                <span className="text-gray-600 dark:text-gray-400 text-sm">Síguenos:</span>
                 <div className="flex space-x-4">
                   {SOCIAL_LINKS.map((social) => (
                     <a
                       key={social.name}
                       href={social.href}
-                      className="text-gray-500 hover:text-purple-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-gray-50 p-2 rounded-lg transition-all duration-200"
+                      className="
+                        text-gray-500 dark:text-gray-400
+                        hover:text-purple-700 dark:hover:text-purple-300 
+                        hover:bg-gradient-to-r hover:from-purple-50 hover:to-gray-50
+                        dark:hover:from-purple-900 dark:hover:to-gray-800
+                        p-2 rounded-lg transition-all duration-200
+                      "
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={social.name}

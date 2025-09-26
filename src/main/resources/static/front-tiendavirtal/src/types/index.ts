@@ -20,7 +20,6 @@ export interface MenuItem {
  */
 export interface HeaderProps {
   title: string;
-  menuItems: MenuItem[];
   className?: string;
 }
 

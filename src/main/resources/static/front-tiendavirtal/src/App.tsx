@@ -10,26 +10,12 @@ import { Header, Home, Footer } from './components';
 import { Productos } from './components/pages/Productos';
 import { Carrito } from './components/pages/Carrito';
 import { Login } from './components/pages/Login';
-import type { MenuItem } from './types';
-
-/**
- * Configuración del menú principal
- * 
- * Separamos la configuración del componente para seguir
- * el principio de responsabilidad única
- */
-const MENU_ITEMS: MenuItem[] = [
-  { id: 'home', label: 'Inicio', href: '/' },
-  { id: 'products', label: 'Productos', href: '/productos' },
-  { id: 'cart', label: 'Carrito', href: '/carrito' }
-];
 
 /**
  * Configuración de la aplicación
  */
 const APP_CONFIG = {
-  title: 'NebulaTech',
-  menuItems: MENU_ITEMS
+  title: 'NebulaTech'
 };
 
 /**
@@ -59,7 +45,6 @@ function App() {
         {/* Layout Header */}
         <Header 
           title={APP_CONFIG.title} 
-          menuItems={APP_CONFIG.menuItems} 
         />
         
         {/* Contenido principal con rutas */}
