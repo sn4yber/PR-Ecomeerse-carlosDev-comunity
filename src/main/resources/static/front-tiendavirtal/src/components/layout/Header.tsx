@@ -20,6 +20,15 @@ const AdminIcon: React.FC<{ className?: string }> = ({ className = "w-5 h-5" }) 
 );
 
 /**
+ * Icono de carrito de compras
+ */
+const CartIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
+  <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 7H19m-8-7V9a3 3 0 116 0v4m-6 0v7" />
+  </svg>
+);
+
+/**
  * Icono de usuario/perfil
  */
 const UserIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) => (
@@ -62,7 +71,6 @@ const CloseIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) 
  */
 export const Header: React.FC<HeaderProps> = ({ 
   title, 
-  menuItems, 
   className = "" 
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -166,21 +174,40 @@ export const Header: React.FC<HeaderProps> = ({
             </Link>
           </div>
 
-          {/* Botón de usuario/perfil - Redirecciona al login */}
-          <Link 
-            to="/login"
-            className="
-              flex items-center justify-center w-10 h-10 rounded-lg
-              hover:bg-gradient-to-br hover:from-purple-100 hover:to-gray-100
-              active:bg-gradient-to-br active:from-purple-200 active:to-gray-200
-              transition-all duration-200
-              focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
-              no-underline
-            "
-            aria-label="Ir al login"
-          >
-            <UserIcon className="w-6 h-6 text-gray-700" />
-          </Link>
+          {/* Botones de acción */}
+          <div className="flex items-center space-x-2">
+            {/* Botón de carrito */}
+            <Link 
+              to="/carrito"
+              className="
+                flex items-center justify-center w-10 h-10 rounded-lg
+                hover:bg-gradient-to-br hover:from-purple-100 hover:to-gray-100
+                active:bg-gradient-to-br active:from-purple-200 active:to-gray-200
+                transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+                no-underline
+              "
+              aria-label="Ir al carrito"
+            >
+              <CartIcon className="w-6 h-6 text-gray-700" />
+            </Link>
+            
+            {/* Botón de usuario/perfil - Redirecciona al login */}
+            <Link 
+              to="/login"
+              className="
+                flex items-center justify-center w-10 h-10 rounded-lg
+                hover:bg-gradient-to-br hover:from-purple-100 hover:to-gray-100
+                active:bg-gradient-to-br active:from-purple-200 active:to-gray-200
+                transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+                no-underline
+              "
+              aria-label="Ir al login"
+            >
+              <UserIcon className="w-6 h-6 text-gray-700" />
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -314,32 +341,39 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Contenido del sidebar */}
-        <nav className="p-4 space-y-2 overflow-y-auto max-h-full">
-          {menuItems.map((item) => (
+        <div className="p-4 h-full overflow-y-auto bg-white">
+          <nav className="space-y-1">
             <Link
-              key={item.id}
-              to={item.href}
-              className="
-                flex items-center px-4 py-3 text-gray-700 
-                hover:bg-gradient-to-r hover:from-purple-50 hover:to-gray-50
-                hover:text-purple-800
-                active:bg-gradient-to-r active:from-purple-100 active:to-gray-100
-                rounded-lg transition-all duration-200
-                border-l-4 border-transparent hover:border-purple-500
-                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
-                no-underline
-              "
+              to="/"
               onClick={closeSidebar}
+              className="
+                block px-3 py-2 rounded-md text-sm font-medium
+                text-gray-700 hover:text-purple-600
+                hover:bg-gradient-to-r hover:from-purple-50 hover:to-gray-50
+                transition-all duration-200 border-l-2 border-transparent
+                hover:border-purple-500 hover:shadow-sm
+                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+              "
             >
-              {item.icon && (
-                <span className="mr-3 text-lg" role="img" aria-hidden="true">
-                  {item.icon}
-                </span>
-              )}
-              <span className="font-medium">{item.label}</span>
+              🏠 Inicio
             </Link>
-          ))}
-        </nav>
+            
+            <Link
+              to="/productos"
+              onClick={closeSidebar}
+              className="
+                block px-3 py-2 rounded-md text-sm font-medium
+                text-gray-700 hover:text-purple-600
+                hover:bg-gradient-to-r hover:from-purple-50 hover:to-gray-50
+                transition-all duration-200 border-l-2 border-transparent
+                hover:border-purple-500 hover:shadow-sm
+                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+              "
+            >
+              🛍️ Productos
+            </Link>
+          </nav>
+        </div>
 
         {/* Footer del sidebar */}
         <div className="
