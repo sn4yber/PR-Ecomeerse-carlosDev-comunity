@@ -50,11 +50,11 @@ public class JwtTokenUtil {
 
     // Extraer todos los claims del token
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser()
-                .verifyWith(getSigningKey())
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     // Verificar si el token ha expirado
@@ -81,10 +81,10 @@ public class JwtTokenUtil {
         Date expirationDate = new Date(now.getTime() + jwtConfig.getExpiration());
 
         return Jwts.builder()
-                .claims(claims)
-                .subject(subject)
-                .issuedAt(now)
-                .expiration(expirationDate)
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(now)
+                .setExpiration(expirationDate)
                 .signWith(getSigningKey())
                 .compact();
     }
@@ -95,9 +95,9 @@ public class JwtTokenUtil {
         Date expirationDate = new Date(now.getTime() + jwtConfig.getRefreshExpiration());
 
         return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .issuedAt(now)
-                .expiration(expirationDate)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(now)
+                .setExpiration(expirationDate)
                 .signWith(getSigningKey())
                 .compact();
     }

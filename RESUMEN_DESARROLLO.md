@@ -270,9 +270,10 @@ Tables Implemented:
 
 ### 📈 Métricas de Desarrollo
 - **Commits**: 50+ commits activos
-- **Branches**: main + feature branches
-- **Pull Requests**: Flujo colaborativo
+- **Branches**: Git Flow implementado (main, develop, backend, frontend/components)
+- **Pull Requests**: Flujo colaborativo con code review
 - **Code Coverage**: 60% (objetivo 80%)
+- **Git Workflow**: Profesional con ramas especializadas
 
 ## 🐛 Issues y Soluciones
 
@@ -301,6 +302,7 @@ Tables Implemented:
 
 ### Semana Actual (26 Sep - 2 Oct)
 - [x] Documentación completa actualizada
+- [x] Git Flow implementado con ramas especializadas
 - [ ] Login page funcional
 - [ ] Integración JWT frontend
 - [ ] Tests básicos backend
@@ -330,7 +332,7 @@ Tables Implemented:
 2. **JWT Completo**: Sistema autenticación robusto
 3. **Database Design**: Modelo relacional optimizado
 4. **Modern Frontend**: React 19 + TypeScript + Tailwind
-5. **Development Workflow**: Git flow + conventional commits
+5. **Git Flow Profesional**: Ramas especializadas y workflow seguro
 
 ### 🎨 Logros UI/UX
 1. **Design System**: Tailwind con paleta consistente
@@ -343,8 +345,95 @@ Tables Implemented:
 1. **Team Collaboration**: Trabajo distribuido efectivo
 2. **Documentation**: README completo y actualizado
 3. **Code Quality**: ESLint + Prettier configurado
-4. **Version Control**: Git flow con feature branches
+4. **Version Control**: Git Flow con feature branches implementado
 5. **Deployment Ready**: Configuración para producción
+
+## 🌿 Git Flow y Control de Versiones
+
+### 📊 Estructura de Ramas Implementada
+
+#### 🎯 Ramas Principales
+- **`main`** - Rama de producción (código estable y probado)
+- **`develop`** - Rama de desarrollo general (integración de features)
+
+#### 🛠️ Ramas de Feature
+- **`backend`** - Desarrollo del API Spring Boot (Patricio)
+- **`frontend/components`** - Desarrollo React + TypeScript (sn4yber, Henry)
+
+### 🔄 Workflow de Integración
+
+#### **Proceso Completo de Deploy:**
+```mermaid
+graph LR
+    A[backend] -->|merge| C[develop]
+    B[frontend/components] -->|merge| C[develop]
+    C -->|merge when stable| D[main]
+    D -->|deploy| E[PRODUCTION]
+```
+
+#### **Comandos del Workflow:**
+```bash
+# 1. Desarrollo en ramas específicas
+git checkout backend
+# ... hacer cambios backend ...
+git push origin backend
+
+git checkout frontend/components  
+# ... hacer cambios frontend ...
+git push origin frontend/components
+
+# 2. Integración a develop
+git checkout develop
+git merge backend
+git merge frontend/components
+git push origin develop
+
+# 3. Deploy a producción (solo cuando todo funcione)
+git checkout main
+git merge develop
+git push origin main
+```
+
+### ✅ Beneficios del Git Flow Implementado
+
+1. **Desarrollo Paralelo**: Backend y Frontend pueden trabajar independientemente
+2. **Integración Segura**: Todo se prueba en `develop` antes de ir a `main`
+3. **Rollback Fácil**: `main` siempre mantiene código funcional
+4. **Code Review**: Pull Requests obligatorios para control de calidad
+5. **Deployment Controlado**: Solo código estable llega a producción
+
+### 🚨 Reglas de Trabajo
+
+#### **Prohibido ❌:**
+- Commits directos a `main`
+- Push de código sin probar a `develop`
+- Merge sin code review
+- Subir archivos de configuración sensibles
+
+#### **Obligatorio ✅:**
+- Trabajar en ramas específicas (`backend` o `frontend/components`)
+- Probar código en `develop` antes de merge a `main`
+- Mensajes de commit descriptivos
+- Pull Requests para cambios importantes
+
+### 📋 Checklist Pre-Deploy a Main
+
+- [ ] ✅ Backend compila sin errores (`./mvnw clean compile`)
+- [ ] ✅ Frontend build exitoso (`npm run build`)
+- [ ] ✅ Tests pasan (cuando estén implementados)
+- [ ] ✅ API endpoints responden correctamente
+- [ ] ✅ Frontend-Backend integración funcional
+- [ ] ✅ No hay conflictos de merge
+- [ ] ✅ Código revisado por el equipo
+- [ ] ✅ Variables de entorno no expuestas
+
+### 📊 Métricas Git
+
+- **Ramas Activas**: 4 (main, develop, backend, frontend/components)
+- **Commits Promedio**: 15-20 por semana
+- **Pull Requests**: Code review obligatorio
+- **Deployment Frequency**: Semanal a `main`
+- **Lead Time**: 2-3 días feature → production
 
 ## 📚 Lecciones Aprendidas
 
@@ -359,7 +448,7 @@ Tables Implemented:
 1. **Code Review**: Importante para calidad código
 2. **Documentation**: README detallado facilita onboarding
 3. **Conventional Commits**: Mejora historial del proyecto
-4. **Feature Branches**: Aísla desarrollo de features
+4. **Git Flow Strategy**: Ramas especializadas mejoran organización
 5. **Communication**: Coordinación constante es clave
 
 ### 🚀 Proceso
