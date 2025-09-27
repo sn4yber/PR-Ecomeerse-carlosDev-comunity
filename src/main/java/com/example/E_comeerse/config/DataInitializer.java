@@ -1,6 +1,7 @@
 package com.example.E_comeerse.config;
 
 import com.example.E_comeerse.model.Usuario;
+import com.example.E_comeerse.model.Role;
 import com.example.E_comeerse.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,20 +27,22 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void initializeTestUsers() {
-        // Verificar si ya existe el usuario admin
+        // Crear usuario administrador por defecto
         if (usuarioRepository.findByNombreUsuario("admin").isEmpty()) {
             Usuario admin = new Usuario();
             admin.setNombre("Administrador");
             admin.setApellido("Sistema");
             admin.setNombreUsuario("admin");
             admin.setContrasena(passwordEncoder.encode("admin123"));
-            admin.setEmail("admin@temp.com"); // Email requerido por validación
+            admin.setEmail("admin@ecommerce.com");
             admin.setTelefono("1234567890");
+            admin.setRol(Role.ADMIN); // Rol de administrador
 
             usuarioRepository.save(admin);
-            log.info("Usuario administrador creado:");
-            log.info("  Username: admin");
-            log.info("  Password: admin123");
+            log.info("🔐 Usuario administrador creado:");
+            log.info("   Username: admin");
+            log.info("   Password: admin123");
+            log.info("   Rol: ADMIN");
         }
 
         // Crear usuario de prueba regular
@@ -49,18 +52,15 @@ public class DataInitializer implements CommandLineRunner {
             usuario.setApellido("Prueba");
             usuario.setNombreUsuario("usuario");
             usuario.setContrasena(passwordEncoder.encode("123456"));
-            usuario.setEmail("usuario@temp.com"); // Email requerido por validación
+            usuario.setEmail("usuario@ecommerce.com");
             usuario.setTelefono("0987654321");
+            usuario.setRol(Role.USER); // Rol de usuario regular
 
             usuarioRepository.save(usuario);
-            log.info("Usuario de prueba creado:");
-            log.info("  Username: usuario");
-            log.info("  Password: 123456");
+            log.info("👤 Usuario regular creado:");
+            log.info("   Username: usuario");
+            log.info("   Password: 123456");
+            log.info("   Rol: USER");
         }
-
-        log.info("=== CREDENCIALES DE ACCESO ===");
-        log.info("ADMIN -> Username: admin | Password: admin123");
-        log.info("USER  -> Username: usuario | Password: 123456");
-        log.info("===============================");
     }
 }

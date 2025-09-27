@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -36,8 +35,12 @@ public class CustomUserDetailsService implements UserDetailsService {
                 return new UsernameNotFoundException("Usuario no encontrado: " + username);
             });
 
-        log.debug("Usuario encontrado: {}", usuario.getNombreUsuario());
-        
+        // Crear las autoridades basadas en el rol del usuario
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name()));
+
+        log.debug("Usuario encontrado: {} con rol: {}", usuario.getNombreUsuario(), usuario.getRol());
+
         return UserPrincipal.builder()
             .id(usuario.getIdUsuario())
             .username(usuario.getNombreUsuario())
@@ -46,27 +49,11 @@ public class CustomUserDetailsService implements UserDetailsService {
             .nombre(usuario.getNombre())
             .apellido(usuario.getApellido())
             .telefono(usuario.getTelefono())
-            .authorities(getAuthorities(usuario))
+            .authorities(authorities)
             .enabled(true)
             .accountNonExpired(true)
             .accountNonLocked(true)
             .credentialsNonExpired(true)
             .build();
-    }
-
-    /**
-     * Obtiene las autoridades del usuario
-     * Por ahora asigna rol USER por defecto, se puede expandir según necesidades
-     */
-    private Collection<? extends GrantedAuthority> getAuthorities(Usuario usuario) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        
-        // Rol por defecto - se puede expandir con tabla de roles
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        
-        // Se puede agregar lógica adicional para roles específicos
-        // authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        
-        return authorities;
     }
 }
