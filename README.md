@@ -79,13 +79,32 @@ E-comeerse/
 │           ├── 📱 App.tsx                 # Componente principal
 │           ├── 🎨 index.css               # Estilos globales
 │           ├── 🧩 components/             # Componentes React
+│           │   ├── 📁 admin/              # 🆕 Componentes Admin Panel
+│           │   │   ├── layout/            # Layout componentes admin
+│           │   │   │   ├── AdminHeader.tsx # Header panel admin ✅
+│           │   │   │   ├── AdminSidebar.tsx # Sidebar admin ✅
+│           │   │   │   └── index.ts       # Exports layout admin
+│           │   │   ├── pages/             # Páginas admin
+│           │   │   │   ├── AdminPanel.tsx # Dashboard principal ✅
+│           │   │   │   ├── ProductManagement.tsx # Gestión productos ✅
+│           │   │   │   ├── UserManagement.tsx # Gestión usuarios ✅
+│           │   │   │   ├── OrderManagement.tsx # Gestión pedidos 🚧
+│           │   │   │   ├── ReportsAndStats.tsx # Reportes y stats 🚧
+│           │   │   │   ├── SystemSettings.tsx # Config sistema 🚧
+│           │   │   │   └── index.ts       # Exports páginas admin
+│           │   │   ├── ui/                # Componentes UI admin
+│           │   │   │   ├── AdminButton.tsx # Botón admin ✅
+│           │   │   │   ├── AdminCard.tsx  # Card admin ✅
+│           │   │   │   ├── AdminTable.tsx # Tabla admin ✅
+│           │   │   │   └── index.ts       # Exports UI admin
+│           │   │   └── index.ts           # Exports admin principales
 │           │   ├── layout/                # Componentes layout
 │           │   │   ├── Header.tsx         # Navegación + Sidebar
 │           │   │   ├── Footer.tsx         # Footer global
 │           │   │   └── index.ts           # Exports layout
 │           │   ├── pages/                 # Páginas/Vistas
 │           │   │   ├── Home.tsx           # Página inicio ✅
-│           │   │   ├── Login.tsx          # Página login 🚧
+│           │   │   ├── Login.tsx          # Página login ✅ (con detección admin)
 │           │   │   ├── Productos.tsx      # Catálogo productos 🚧
 │           │   │   ├── Carrito.tsx        # Carrito compras 🚧
 │           │   │   └── index.ts           # Exports páginas
@@ -390,6 +409,19 @@ CREATE TABLE pedidos (
 | `PUT` | `/api/categorias/{id}` | Actualizar categoría | `{campos a actualizar}` | `{categoria}` |
 | `DELETE` | `/api/categorias/{id}` | Eliminar categoría | - | `{message}` |
 
+### 🛡️ Panel de Administración (`/api/admin`) - 🔒 Solo ADMIN
+
+| Método | Endpoint | Descripción | Body | Respuesta |
+|--------|----------|-------------|------|-----------|
+| `GET` | `/api/admin/usuarios` | Listar todos los usuarios (admin) | - | `[{usuario}]` |
+| `POST` | `/api/admin/usuarios/crear` | Crear usuario con rol específico | `{adminUsuarioDto}` | `{usuario}` |
+| `PUT` | `/api/admin/usuarios/{id}/promover` | Promover usuario a admin | - | `{mensaje}` |
+| `GET` | `/api/admin/productos` | Listar productos (panel admin) | - | `[{producto}]` |
+| `POST` | `/api/admin/productos` | Crear producto (panel admin) | `{producto}` | `{producto}` |
+| `PUT` | `/api/admin/productos/{id}` | Actualizar producto (panel admin) | `{producto}` | `{producto}` |
+| `DELETE` | `/api/admin/productos/{id}` | Eliminar producto (panel admin) | - | `{mensaje}` |
+| `GET` | `/api/admin/productos/{id}` | Obtener producto para edición | - | `{producto}` |
+
 ### 📦 Pedidos (`/api/pedidos`)
 
 | Método | Endpoint | Descripción | Body | Respuesta |
@@ -401,6 +433,180 @@ CREATE TABLE pedidos (
 | `DELETE` | `/api/pedidos/{id}` | Eliminar pedido | - | `{message}` |
 | `GET` | `/api/pedidos/usuario/{idUsuario}` | Pedidos de un usuario | - | `[{pedido}]` |
 | `GET` | `/api/pedidos/estado/{estado}` | Pedidos por estado | - | `[{pedido}]` |
+
+## 🛡️ Panel de Administración - Sistema Completo
+
+### 🎯 Características del Panel Admin
+
+El panel de administración es una **sección completamente separada** del frontend público, diseñado específicamente para administradores del sistema con funcionalidades avanzadas de gestión.
+
+#### ✅ Funcionalidades Implementadas
+
+1. **🔐 Autenticación Basada en Roles**
+   - Login con detección automática de rol ADMIN
+   - Redirección automática al panel `/admin` para administradores
+   - Protección de rutas administrativas con Spring Security
+
+2. **📊 Dashboard Principal** (`/admin`)
+   - Vista general del sistema con métricas clave
+   - Navegación centralizada a todos los módulos
+   - Indicadores de estado del sistema
+
+3. **👥 Gestión de Usuarios** (`/admin/usuarios`)
+   - CRUD completo de usuarios del sistema
+   - Promoción de usuarios regulares a administradores
+   - Visualización de roles y estados de cuenta
+
+4. **🛍️ Gestión de Productos** (`/admin/productos`)
+   - CRUD completo de productos
+   - Gestión de categorías y stock
+   - Subida de imágenes y gestión de metadatos
+
+#### 🚧 Módulos en Desarrollo
+
+5. **📦 Gestión de Pedidos** (`/admin/pedidos`)
+   - Visualización y gestión de todos los pedidos
+   - Cambio de estados (Pendiente → Procesando → Enviado → Entregado)
+   - Sistema de notificaciones a clientes
+
+6. **📈 Reportes y Estadísticas** (`/admin/reportes`)
+   - Dashboard con métricas de ventas
+   - Gráficos de rendimiento temporal
+   - Reportes de productos más vendidos
+
+7. **⚙️ Configuración del Sistema** (`/admin/configuracion`)
+   - Parámetros generales del sistema
+   - Configuración de métodos de pago
+   - Ajustes de envío y logística
+
+### 🏗️ Arquitectura del Panel Admin
+
+#### Backend - Controlador Admin (`AdminController.java`)
+
+```java
+@RestController
+@RequestMapping("/api/admin")
+@PreAuthorize("hasRole('ADMIN')")  // 🔒 Solo usuarios con rol ADMIN
+public class AdminController {
+    
+    // Gestión de usuarios
+    @GetMapping("/usuarios")
+    public ResponseEntity<List<Usuario>> listarTodosLosUsuarios();
+    
+    @PostMapping("/usuarios/crear")
+    public ResponseEntity<?> crearUsuarioAdmin(@Valid @RequestBody AdminUsuarioDto usuarioDto);
+    
+    @PutMapping("/usuarios/{id}/promover")
+    public ResponseEntity<?> promoverUsuario(@PathVariable Long id);
+    
+    // Gestión de productos
+    @GetMapping("/productos")
+    public ResponseEntity<List<Producto>> listarProductosAdmin();
+    
+    @PostMapping("/productos")
+    public ResponseEntity<?> crearProductoAdmin(@Valid @RequestBody Producto producto);
+    
+    @PutMapping("/productos/{id}")
+    public ResponseEntity<?> actualizarProductoAdmin(@PathVariable Long id, @Valid @RequestBody Producto producto);
+    
+    @DeleteMapping("/productos/{id}")
+    public ResponseEntity<?> eliminarProductoAdmin(@PathVariable Long id);
+}
+```
+
+#### Frontend - Estructura de Componentes Admin
+
+```
+📁 components/admin/
+├── 📁 layout/                    # Layout específicos del admin
+│   ├── AdminHeader.tsx           # Header del panel admin ✅
+│   ├── AdminSidebar.tsx          # Sidebar navegación admin ✅
+│   └── index.ts                  # Exports layout admin
+├── 📁 pages/                     # Páginas principales admin
+│   ├── AdminPanel.tsx            # Dashboard principal ✅
+│   ├── ProductManagement.tsx     # Gestión productos ✅
+│   ├── UserManagement.tsx        # Gestión usuarios ✅
+│   ├── OrderManagement.tsx       # Gestión pedidos 🚧
+│   ├── ReportsAndStats.tsx       # Reportes y estadísticas 🚧
+│   ├── SystemSettings.tsx        # Configuración sistema 🚧
+│   └── index.ts                  # Exports páginas admin
+├── 📁 ui/                        # Componentes UI específicos admin
+│   ├── AdminButton.tsx           # Botones estilo admin ✅
+│   ├── AdminCard.tsx             # Cards para dashboard ✅
+│   ├── AdminTable.tsx            # Tablas para listados ✅
+│   └── index.ts                  # Exports UI admin
+└── index.ts                      # Exports principales admin
+```
+
+### 🔐 Sistema de Autenticación Admin
+
+#### Flujo de Login para Administradores
+
+1. **Login Estándar** - Usuario ingresa credenciales en `/login`
+2. **Detección de Rol** - Backend valida credenciales y devuelve rol del usuario
+3. **Redirección Automática** - Si rol = "ADMIN", redirección a `/admin`
+4. **Acceso Protegido** - Todas las rutas `/admin/*` requieren rol ADMIN
+
+```typescript
+// Login.tsx - Detección automática de administradores
+const loginMutation = useMutation({
+  mutationFn: async () => {
+    const response = await fetch("http://localhost:8080/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nombreUsuario, contrasena }),
+    });
+    return response.json();
+  },
+  onSuccess: (data) => {
+    localStorage.setItem("token", data.accessToken);
+    localStorage.setItem("user", JSON.stringify(data.user));
+    
+    // 🎯 Detección automática de rol admin
+    if (data.user.rol === "ADMIN") {
+      window.location.href = "/admin"; // Redirección al panel admin
+    } else {
+      window.location.href = "/dashboard"; // Dashboard normal
+    }
+  }
+});
+```
+
+### 🎨 Diseño y UX del Panel Admin
+
+#### Características de Diseño
+
+- **🎨 Design System Consistente** - Paleta de colores dedicada para admin
+- **📱 Responsive Design** - Optimizado para desktop y tablet
+- **⚡ Performance** - Lazy loading de componentes pesados
+- **🔍 Búsqueda y Filtros** - Herramientas avanzadas de gestión
+- **📊 Visualización de Datos** - Charts y métricas en tiempo real
+
+#### Estados de Desarrollo
+
+- **✅ Completamente Funcional**: AdminPanel, ProductManagement, UserManagement
+- **🚧 En Desarrollo**: OrderManagement, ReportsAndStats, SystemSettings
+- **📋 Planificado**: Sistema de notificaciones, Gestión de roles avanzada
+
+### 🛣️ Rutas del Panel Admin
+
+```typescript
+// App.tsx - Configuración de rutas admin
+<Routes>
+  {/* Rutas públicas */}
+  <Route path="/" element={<Home />} />
+  <Route path="/productos" element={<Productos />} />
+  <Route path="/login" element={<Login />} />
+  
+  {/* 🛡️ Panel de Administración */}
+  <Route path="/admin" element={<AdminPanel />} />
+  <Route path="/admin/productos" element={<ProductManagement />} />
+  <Route path="/admin/usuarios" element={<UserManagement />} />
+  <Route path="/admin/pedidos" element={<OrderManagement />} />
+  <Route path="/admin/reportes" element={<ReportsAndStats />} />
+  <Route path="/admin/configuracion" element={<SystemSettings />} />
+</Routes>
+```
 
 ## 🧩 Componentes Frontend Detallados
 
@@ -450,12 +656,13 @@ const menuItems = [
 - **Performance optimizado**
 
 #### 🔐 Login (`/components/pages/Login.tsx`)
-**Estado:** 🚧 En construcción
-- **Estructura base** implementada
-- **Integración React Query** preparada
-- **Persistencia JWT** comentada (lista para activar)
-- **Validaciones** de formulario pendientes
-- **Estados de carga** preparados
+**Estado:** ✅ Completamente funcional con detección de admin
+- **Sistema de autenticación** completo con backend
+- **Detección automática de roles** (USER/ADMIN)
+- **Redirección inteligente** al dashboard correspondiente
+- **Persistencia JWT** en localStorage
+- **Manejo de errores** de autenticación
+- **Integración React Query** para estado de carga
 
 #### 🛍️ Productos (`/components/pages/Productos.tsx`)
 **Estado:** 🚧 En construcción
@@ -632,45 +839,59 @@ jwt.header-string=Authorization
 - **JwtValidationInterceptor**: Valida tokens en requests
 - **CustomUserDetailsService**: Carga detalles del usuario
 - **UserPrincipal**: Wrapper para Spring Security
+- **AuthExceptionHandler**: Manejo global de excepciones de autenticación
 
-### Roles y Permisos (Futuro)
+### 🛡️ Sistema de Roles Implementado
+
 ```java
-public enum UserRole {
-    GUEST,    // Usuario no autenticado
-    USER,     // Cliente registrado
-    ADMIN,    // Administrador
-    SUPER_ADMIN // Super administrador
+public enum Role {
+    USER,     // Cliente registrado - Acceso a funciones básicas
+    ADMIN     // Administrador - Acceso completo al panel admin
 }
 ```
+
+#### Flujo de Autorización
+
+1. **Login** → Backend valida credenciales y devuelve rol del usuario
+2. **Token JWT** → Incluye información del rol en el payload
+3. **Frontend** → Detecta rol y redirige al dashboard correspondiente
+4. **Backend Security** → `@PreAuthorize("hasRole('ADMIN')")` protege endpoints admin
+5. **Rutas Protegidas** → Spring Security valida permisos automáticamente
+
+#### Endpoints Protegidos por Rol
+
+- **🟢 Público**: `/api/auth/login`, `/api/productos` (GET)
+- **🔵 USER**: `/api/usuarios/{id}` (solo su propio perfil), `/api/pedidos` (sus pedidos)
+- **🔴 ADMIN**: `/api/admin/**`, `/api/productos` (POST/PUT/DELETE), gestión completa
 
 ## 🎯 Rutas Frontend (React Router)
 
 ### Configuración de Rutas
 ```typescript
-// App.tsx
+// App.tsx - Rutas completas implementadas
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const AppRoutes = () => (
   <Routes>
-    {/* Rutas públicas */}
+    {/* 🌐 Rutas públicas */}
     <Route path="/" element={<Home />} />
     <Route path="/productos" element={<Productos />} />
-    <Route path="/categorias" element={<Categorias />} />
-    
-    {/* Rutas de autenticación */}
     <Route path="/login" element={<Login />} />
-    <Route path="/registro" element={<Registro />} />
     
-    {/* Rutas protegidas */}
-    <Route path="/carrito" element={<ProtectedRoute><Carrito /></ProtectedRoute>} />
-    <Route path="/perfil" element={<ProtectedRoute><Perfil /></ProtectedRoute>} />
-    <Route path="/pedidos" element={<ProtectedRoute><Pedidos /></ProtectedRoute>} />
+    {/* 👤 Rutas de usuario autenticado */}
+    <Route path="/carrito" element={<Carrito />} />
+    <Route path="/dashboard" element={<UserDashboard />} />
     
-    {/* Rutas admin */}
-    <Route path="/admin/*" element={<AdminRoute><AdminPanel /></AdminRoute>} />
+    {/* 🛡️ Panel de Administración - Solo ADMIN */}
+    <Route path="/admin" element={<AdminPanel />} />
+    <Route path="/admin/productos" element={<ProductManagement />} />
+    <Route path="/admin/usuarios" element={<UserManagement />} />
+    <Route path="/admin/pedidos" element={<OrderManagement />} />
+    <Route path="/admin/reportes" element={<ReportsAndStats />} />
+    <Route path="/admin/configuracion" element={<SystemSettings />} />
     
-    {/* Ruta 404 */}
-    <Route path="*" element={<NotFound />} />
+    {/* Fallback - Redirección al home */}
+    <Route path="*" element={<Home />} />
   </Routes>
 );
 ```
