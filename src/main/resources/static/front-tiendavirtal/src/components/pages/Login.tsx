@@ -69,41 +69,6 @@ export const Login: React.FC<LoginProps> = ({ className = "" }) => {
   };
 
   return (
-<<<<<<< HEAD
-    <main className={`
-      min-h-screen 
-      bg-gray-50 
-      ${className}
-    `}>
-      <div className="container mx-auto px-4 py-8">
-        {/* Header de la página */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            <span className="
-              bg-gradient-to-r from-gray-900 to-purple-600 
-              bg-clip-text text-transparent
-            ">
-              Iniciar Sesión
-            </span>
-          </h1>
-          <p className="text-lg text-gray-600">
-            Accede a tu cuenta para continuar
-          </p>
-        </div>
-
-        {/* Contenido principal - vacío por ahora como solicitado */}
-        <div className="
-          bg-white 
-          rounded-lg shadow-sm 
-          p-8 min-h-96 flex items-center justify-center
-          transition-colors duration-200
-        ">
-          <div className="text-center text-gray-500">
-            <h2 className="text-xl font-semibold mb-2 text-gray-700">
-              Login en construcción
-            </h2>
-            <p>El sistema de autenticación se agregará próximamente</p>
-=======
     <main className={`min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-indigo-50 p-4 ${className}`}>
       <div className="w-full max-w-sm">
         {/* Logo/Título */}
@@ -112,7 +77,6 @@ export const Login: React.FC<LoginProps> = ({ className = "" }) => {
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
->>>>>>> frontend/components
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
             Bienvenido
@@ -120,26 +84,6 @@ export const Login: React.FC<LoginProps> = ({ className = "" }) => {
           <p className="text-sm text-gray-600">Inicia sesión en tu cuenta</p>
         </div>
 
-<<<<<<< HEAD
-        {/* Información para desarrolladores */}
-        <div className="
-          mt-6 p-4 
-          bg-blue-50 
-          rounded-lg 
-          border border-blue-200
-          transition-colors duration-200
-        ">
-          <h3 className="
-            text-sm font-semibold 
-            text-blue-800 
-            mb-2
-          ">
-            nota-HENRY - para la persistencia de login
-          </h3>
-          <p className="text-xs text-blue-700">
-            Para persistencia de login: useQuery + localStorage + verificación en App.tsx
-          </p>
-=======
         {/* Formulario */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6">
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -223,7 +167,6 @@ export const Login: React.FC<LoginProps> = ({ className = "" }) => {
               )}
             </button>
           </form>
->>>>>>> frontend/components
         </div>
       </div>
     </main>
