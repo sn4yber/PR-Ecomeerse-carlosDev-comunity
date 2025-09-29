@@ -11,12 +11,8 @@ html.dark body {
   color: #f3f4f6;
 }
 
-@plugin "tailwindcss-animate";
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
+/* Variables CSS personalizadas */
+:root {
   /* Dark mode configuration */
   --color-scheme: light dark;
   
@@ -128,10 +124,11 @@ html.dark body {
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    box-sizing: border-box;
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
   }
 }
 
