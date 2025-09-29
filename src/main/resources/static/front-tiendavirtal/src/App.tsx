@@ -10,6 +10,12 @@ import { Header, Home, Footer } from './components';
 import { Productos } from './components/pages/Productos';
 import { Carrito } from './components/pages/Carrito';
 import { Login } from './components/pages/Login';
+import { AdminPanel } from './components/admin/pages/AdminPanel';
+import { ProductManagement } from './components/admin/pages/ProductManagement';
+import { UserManagement } from './components/admin/pages/UserManagement';
+import { ReportsAndStats } from './components/admin/pages/ReportsAndStats';
+import { OrderManagement } from './components/admin/pages/OrderManagement';
+import { SystemSettings } from './components/admin/pages/SystemSettings';
 import type { MenuItem } from './types';
 
 /**
@@ -69,6 +75,15 @@ function App() {
             <Route path="/productos" element={<Productos />} />
             <Route path="/carrito" element={<Carrito />} />
             <Route path="/login" element={<Login />} />
+            
+            {/* Rutas del panel de administración */}
+            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/admin/productos" element={<ProductManagement />} />
+            <Route path="/admin/usuarios" element={<UserManagement />} />
+            <Route path="/admin/reportes" element={<ReportsAndStats />} />
+            <Route path="/admin/pedidos" element={<OrderManagement />} />
+            <Route path="/admin/configuracion" element={<SystemSettings />} />
+            
             {/* Ruta por defecto - redirección al home */}
             <Route path="*" element={<Home />} />
           </Routes>

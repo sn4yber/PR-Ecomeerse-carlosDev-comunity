@@ -87,6 +87,7 @@ public class AuthService {
                     .email(usuario.getEmail())
                     .nombre(usuario.getNombre())
                     .apellido(usuario.getApellido())
+                    .rol(usuario.getRol().name())
                     .build())
                 .build();
 
@@ -131,6 +132,7 @@ public class AuthService {
                         .email(usuario.getEmail())
                         .nombre(usuario.getNombre())
                         .apellido(usuario.getApellido())
+                        .rol(usuario.getRol().name())
                         .build())
                     .build();
             })
