@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/productos")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class ProductoController {
 
     private final ProductoService productoService;
@@ -76,5 +76,27 @@ public class ProductoController {
     public ResponseEntity<List<Producto>> buscarProductos(@RequestParam String nombre) {
         List<Producto> productos = productoService.buscarPorNombre(nombre);
         return ResponseEntity.ok(productos);
+    }
+
+    @GetMapping("/destacados")
+    public ResponseEntity<List<Producto>> obtenerProductosDestacados() {
+        List<Producto> productos = productoService.obtenerProductosDestacados();
+        return ResponseEntity.ok(productos);
+    }
+
+    @GetMapping("/destacados/top3")
+    public ResponseEntity<List<Producto>> obtenerTop3Destacados() {
+        List<Producto> productos = productoService.obtenerTop3Destacados();
+        return ResponseEntity.ok(productos);
+    }
+
+    @PatchMapping("/{id}/destacado")
+    public ResponseEntity<?> marcarComoDestacado(@PathVariable Long id, @RequestParam Boolean destacado) {
+        try {
+            Producto producto = productoService.marcarComoDestacado(id, destacado);
+            return ResponseEntity.ok(producto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

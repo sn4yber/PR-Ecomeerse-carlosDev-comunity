@@ -71,10 +71,15 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/categorias").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/categorias/**").permitAll()
 
+                // Endpoints de archivos (upload público por ahora - cambiar si es necesario)
+                .requestMatchers("/api/files/**").permitAll()
+                .requestMatchers("/uploads/**").permitAll()
+
                 // Endpoints de productos (escritura solo para ADMIN)
                 .requestMatchers(HttpMethod.POST, "/api/productos").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/productos/**").hasRole("ADMIN")
 
                 // Endpoints de administrador - SOLO ADMINS
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")

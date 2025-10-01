@@ -24,4 +24,10 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     @Query("SELECT p FROM Producto p WHERE p.cantidadStock > 0")
     List<Producto> findProductosEnStock();
+
+    @Query("SELECT p FROM Producto p WHERE p.destacado = true ORDER BY p.fechaCreacion DESC")
+    List<Producto> findProductosDestacados();
+
+    @Query("SELECT p FROM Producto p WHERE p.destacado = true ORDER BY p.fechaCreacion DESC")
+    List<Producto> findTop3ByDestacadoTrueOrderByFechaCreacionDesc();
 }

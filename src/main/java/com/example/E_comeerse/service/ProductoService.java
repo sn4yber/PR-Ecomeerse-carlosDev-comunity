@@ -22,4 +22,10 @@ public interface ProductoService {
     List<Producto> buscarPorCategoria(Long idCategoria);
 
     List<Producto> buscarPorNombre(String nombre);
+
+    List<Producto> obtenerProductosDestacados();
+
+    List<Producto> obtenerTop3Destacados();
+
+    Producto marcarComoDestacado(Long id, Boolean destacado);
 }

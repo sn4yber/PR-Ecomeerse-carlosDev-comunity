@@ -46,6 +46,9 @@ public class Producto {
     @Column(name = "url_imagen", length = 500)
     private String urlImagen;
 
+    @Column(name = "destacado", nullable = false)
+    private Boolean destacado = false;
+
     @Column(name = "fecha_creacion", updatable = false)
     private LocalDateTime fechaCreacion;
 
@@ -94,6 +97,9 @@ public class Producto {
 
     public String getUrlImagen() { return urlImagen; }
     public void setUrlImagen(String urlImagen) { this.urlImagen = urlImagen; }
+
+    public Boolean getDestacado() { return destacado; }
+    public void setDestacado(Boolean destacado) { this.destacado = destacado; }
 
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }

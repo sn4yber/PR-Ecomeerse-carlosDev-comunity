@@ -50,6 +50,9 @@ public class ProductoServiceImpl implements ProductoService {
         productoActualizar.setIdCategoria(producto.getIdCategoria());
         productoActualizar.setCodigoProducto(producto.getCodigoProducto());
         productoActualizar.setUrlImagen(producto.getUrlImagen());
+        if (producto.getDestacado() != null) {
+            productoActualizar.setDestacado(producto.getDestacado());
+        }
 
         return productoRepository.save(productoActualizar);
     }
@@ -73,6 +76,29 @@ public class ProductoServiceImpl implements ProductoService {
             return List.of();
         }
         return productoRepository.findByNombreContainingIgnoreCase(nombre.trim());
+    }
+
+    @Override
+    public List<Producto> obtenerProductosDestacados() {
+        return productoRepository.findProductosDestacados();
+    }
+
+    @Override
+    public List<Producto> obtenerTop3Destacados() {
+        List<Producto> destacados = productoRepository.findTop3ByDestacadoTrueOrderByFechaCreacionDesc();
+        return destacados.size() > 3 ? destacados.subList(0, 3) : destacados;
+    }
+
+    @Override
+    public Producto marcarComoDestacado(Long id, Boolean destacado) {
+        Optional<Producto> productoExistente = productoRepository.findById(id);
+        if (productoExistente.isEmpty()) {
+            throw new IllegalArgumentException("Producto no encontrado con ID: " + id);
+        }
+
+        Producto producto = productoExistente.get();
+        producto.setDestacado(destacado);
+        return productoRepository.save(producto);
     }
 
     private void validarProducto(Producto producto) {
