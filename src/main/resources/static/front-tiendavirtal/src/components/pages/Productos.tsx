@@ -6,8 +6,9 @@
  * @updated 2025-10-01
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 import { productosAPI, type Producto } from '../../lib/api';
 import { resolveImageUrl } from '../../lib/utils';
 
@@ -34,7 +35,26 @@ export interface ProductosProps {
  * @param className - Clases CSS adicionales
  */
 export const Productos: React.FC<ProductosProps> = ({ className = "" }) => {
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('todas');
+
+  // Categorías disponibles
+  const categorias = [
+    { value: 'todas', label: 'Todas las categorías', icon: '🌟' },
+    { value: 'gaming-pcs', label: 'Gaming PCs', icon: '🖥️' },
+    { value: 'perifericos', label: 'Periféricos', icon: '⌨️' },
+    { value: 'componentes', label: 'Componentes', icon: '🔧' },
+    { value: 'accesorios', label: 'Accesorios', icon: '🎧' },
+  ];
+
+  // Leer categoría de la URL
+  useEffect(() => {
+    const categoryParam = searchParams.get('categoria');
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    }
+  }, [searchParams]);
 
   // Obtener todos los productos
   const { data: productos, isLoading, error } = useQuery({
@@ -44,11 +64,15 @@ export const Productos: React.FC<ProductosProps> = ({ className = "" }) => {
     }
   });
 
-  // Filtrar productos por búsqueda
-  const productosFiltrados = productos?.filter((producto: Producto) =>
-    producto.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    producto.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filtrar productos por búsqueda y categoría
+  const productosFiltrados = productos?.filter((producto: Producto) => {
+    const matchesSearch = producto.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      producto.descripcion.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesCategory = selectedCategory === 'todas' || producto.categoria === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <main className={`min-h-screen bg-gray-50 ${className}`}>
@@ -63,6 +87,26 @@ export const Productos: React.FC<ProductosProps> = ({ className = "" }) => {
           <p className="text-lg text-gray-600">
             Explora nuestro catálogo completo de productos gaming
           </p>
+        </div>
+
+        {/* Filtros de categoría */}
+        <div className="mb-6">
+          <div className="flex flex-wrap gap-3">
+            {categorias.map((cat) => (
+              <button
+                key={cat.value}
+                onClick={() => setSelectedCategory(cat.value)}
+                className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 ${
+                  selectedCategory === cat.value
+                    ? 'bg-gradient-to-r from-gray-800 to-purple-700 text-white shadow-lg scale-105'
+                    : 'bg-white text-gray-700 hover:bg-gray-50 shadow hover:shadow-md'
+                }`}
+              >
+                <span className="text-xl">{cat.icon}</span>
+                <span>{cat.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Barra de búsqueda */}
@@ -188,6 +232,16 @@ export const Productos: React.FC<ProductosProps> = ({ className = "" }) => {
 
                   {/* Información del producto */}
                   <div className="p-5 flex flex-col flex-grow">
+                    {/* Badge de categoría */}
+                    {producto.categoria && (
+                      <div className="mb-3">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-gray-800 to-purple-700 text-white">
+                          {categorias.find(c => c.value === producto.categoria)?.icon || '📦'}{' '}
+                          {categorias.find(c => c.value === producto.categoria)?.label || producto.categoria}
+                        </span>
+                      </div>
+                    )}
+                    
                     <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-1">
                       {producto.nombre}
                     </h3>

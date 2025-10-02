@@ -56,6 +56,71 @@ const CloseIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) 
 );
 
 /**
+ * Componente de Dropdown de Categorías para el Sidebar
+ */
+const CategoriesDropdown: React.FC<{ onCategoryClick: () => void }> = ({ onCategoryClick }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const categorias = [
+    { name: 'Todas', icon: '🌟', value: 'todas' },
+    { name: 'Gaming PCs', icon: '🖥️', value: 'gaming-pcs' },
+    { name: 'Periféricos', icon: '⌨️', value: 'perifericos' },
+    { name: 'Componentes', icon: '🔧', value: 'componentes' },
+    { name: 'Accesorios', icon: '🎧', value: 'accesorios' },
+  ];
+
+  return (
+    <div className="space-y-1">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="
+          w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium
+          text-gray-700 hover:text-purple-600
+          hover:bg-gradient-to-r hover:from-purple-50 hover:to-gray-50
+          transition-all duration-200 border-l-2 border-transparent
+          hover:border-purple-500 hover:shadow-sm
+          focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+        "
+      >
+        <span>📂 Categorías</span>
+        <svg 
+          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {/* Lista de categorías desplegable */}
+      {isOpen && (
+        <div className="ml-4 space-y-1 animate-fade-in">
+          {categorias.map((categoria) => (
+            <Link
+              key={categoria.value}
+              to={categoria.value === 'todas' ? '/productos' : `/productos?categoria=${categoria.value}`}
+              onClick={onCategoryClick}
+              className="
+                flex items-center gap-2 px-3 py-2 rounded-md text-sm
+                text-gray-600 hover:text-purple-600
+                hover:bg-gradient-to-r hover:from-purple-50 hover:to-gray-50
+                transition-all duration-200 border-l-2 border-transparent
+                hover:border-purple-400
+                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+              "
+            >
+              <span className="text-lg">{categoria.icon}</span>
+              <span>{categoria.name}</span>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+/**
  * Componente Header principal
  * 
  * Características:
@@ -424,6 +489,9 @@ export const Header: React.FC<HeaderProps> = ({
             >
               🛍️ Productos
             </Link>
+
+            {/* Dropdown de Categorías */}
+            <CategoriesDropdown onCategoryClick={closeSidebar} />
           </nav>
         </div>
 

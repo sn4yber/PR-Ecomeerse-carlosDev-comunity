@@ -38,6 +38,10 @@ public class Producto {
     @Column(name = "id_categoria")
     private Long idCategoria;
 
+    @Size(max = 100, message = "La categoría no puede exceder 100 caracteres")
+    @Column(name = "categoria", length = 100)
+    private String categoria;
+
     @Size(max = 100, message = "El código de producto no puede exceder 100 caracteres")
     @Column(name = "codigo_producto", unique = true, length = 100)
     private String codigoProducto;
@@ -91,6 +95,9 @@ public class Producto {
 
     public Long getIdCategoria() { return idCategoria; }
     public void setIdCategoria(Long idCategoria) { this.idCategoria = idCategoria; }
+
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
 
     public String getCodigoProducto() { return codigoProducto; }
     public void setCodigoProducto(String codigoProducto) { this.codigoProducto = codigoProducto; }

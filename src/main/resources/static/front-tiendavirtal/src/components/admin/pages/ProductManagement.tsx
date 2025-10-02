@@ -36,6 +36,14 @@ export const ProductManagement: React.FC<ProductManagementProps> = ({ className 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [useUrlInput, setUseUrlInput] = useState(false);
 
+  // Categorías disponibles
+  const categorias = [
+    { value: 'gaming-pcs', label: 'Gaming PCs', icon: '🖥️' },
+    { value: 'perifericos', label: 'Periféricos', icon: '⌨️' },
+    { value: 'componentes', label: 'Componentes', icon: '🔧' },
+    { value: 'accesorios', label: 'Accesorios', icon: '🎧' },
+  ];
+
   // Estado del formulario
   const [formData, setFormData] = useState<Producto>({
     nombre: '',
@@ -44,6 +52,7 @@ export const ProductManagement: React.FC<ProductManagementProps> = ({ className 
     cantidadStock: 0,
     urlImagen: '',
     destacado: false,
+    categoria: 'gaming-pcs', // Categoría por defecto
   });
 
   // Cargar productos
@@ -75,6 +84,7 @@ export const ProductManagement: React.FC<ProductManagementProps> = ({ className 
       cantidadStock: 0,
       urlImagen: '',
       destacado: false,
+      categoria: 'gaming-pcs', // Categoría por defecto
     });
     setImagePreview(null);
     setSelectedFile(null);
@@ -85,7 +95,11 @@ export const ProductManagement: React.FC<ProductManagementProps> = ({ className 
   // Abrir modal para editar
   const handleEditarProducto = (producto: Producto) => {
     setEditingProduct(producto);
-    setFormData(producto);
+    // Si el producto no tiene categoría, asignar una por defecto
+    setFormData({
+      ...producto,
+      categoria: producto.categoria || 'gaming-pcs'
+    });
     // Resolver URL de imagen para la vista previa
     setImagePreview(resolveImageUrl(producto.urlImagen));
     setSelectedFile(null);
@@ -256,6 +270,7 @@ export const ProductManagement: React.FC<ProductManagementProps> = ({ className 
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Imagen</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categoría</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Precio</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Destacado</th>
@@ -288,6 +303,18 @@ export const ProductManagement: React.FC<ProductManagementProps> = ({ className 
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">{producto.nombre}</div>
                       <div className="text-sm text-gray-500 truncate max-w-xs">{producto.descripcion}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {producto.categoria ? (
+                        <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gradient-to-r from-gray-800 to-purple-700 text-white">
+                          {categorias.find(c => c.value === producto.categoria)?.icon || '📦'}{' '}
+                          {categorias.find(c => c.value === producto.categoria)?.label || producto.categoria}
+                        </span>
+                      ) : (
+                        <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-200 text-gray-600">
+                          Sin categoría
+                        </span>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-semibold text-gray-900">${producto.precio.toFixed(2)}</div>
@@ -363,6 +390,24 @@ export const ProductManagement: React.FC<ProductManagementProps> = ({ className 
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       placeholder="Ej: Mouse Gaming RGB"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Categoría *
+                    </label>
+                    <select
+                      required
+                      value={formData.categoria || 'gaming-pcs'}
+                      onChange={(e) => setFormData({ ...formData, categoria: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+                    >
+                      {categorias.map((cat) => (
+                        <option key={cat.value} value={cat.value}>
+                          {cat.icon} {cat.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>

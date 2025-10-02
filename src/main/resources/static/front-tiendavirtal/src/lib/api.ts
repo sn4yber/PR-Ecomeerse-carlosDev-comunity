@@ -19,6 +19,7 @@ export interface Producto {
   precio: number;
   cantidadStock: number;
   idCategoria?: number;
+  categoria?: string;
   codigoProducto?: string;
   urlImagen?: string;
   destacado?: boolean;
