@@ -9,6 +9,7 @@
 import React, { useState, useEffect } from 'react';
 import { AdminHeader } from '../layout/AdminHeader';
 import { productosAPI, filesAPI, type Producto } from '../../../lib/api';
+import { resolveImageUrl } from '../../../lib/utils';
 
 export interface ProductManagementProps {
   className?: string;
@@ -85,7 +86,8 @@ export const ProductManagement: React.FC<ProductManagementProps> = ({ className 
   const handleEditarProducto = (producto: Producto) => {
     setEditingProduct(producto);
     setFormData(producto);
-    setImagePreview(producto.urlImagen || null);
+    // Resolver URL de imagen para la vista previa
+    setImagePreview(resolveImageUrl(producto.urlImagen));
     setSelectedFile(null);
     setUseUrlInput(!!producto.urlImagen);
     setShowModal(true);
@@ -265,8 +267,15 @@ export const ProductManagement: React.FC<ProductManagementProps> = ({ className 
                   <tr key={producto.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="h-16 w-16 rounded-lg overflow-hidden bg-gray-100">
-                        {producto.urlImagen ? (
-                          <img src={producto.urlImagen} alt={producto.nombre} className="h-full w-full object-cover" />
+                        {resolveImageUrl(producto.urlImagen) ? (
+                          <img 
+                            src={resolveImageUrl(producto.urlImagen)!} 
+                            alt={producto.nombre} 
+                            className="h-full w-full object-cover"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
                         ) : (
                           <div className="h-full w-full flex items-center justify-center text-gray-400">
                             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -475,8 +484,10 @@ export const ProductManagement: React.FC<ProductManagementProps> = ({ className 
                         type="url"
                         value={formData.urlImagen}
                         onChange={(e) => {
-                          setFormData({ ...formData, urlImagen: e.target.value });
-                          setImagePreview(e.target.value);
+                          const url = e.target.value;
+                          setFormData({ ...formData, urlImagen: url });
+                          // Resolver URL para vista previa
+                          setImagePreview(resolveImageUrl(url));
                         }}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                         placeholder="https://ejemplo.com/imagen.jpg"

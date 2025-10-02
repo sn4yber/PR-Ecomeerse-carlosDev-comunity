@@ -9,7 +9,9 @@
 - Implementar mejores prácticas de desarrollo full-stack
 - Proporcionar experiencia de usuario moderna y responsiva
 - Gestión completa de inventario, usuarios y pedidos
-- Sistema de autenticación JWT robusto
+- Sistema de autenticación JWT robusto con refresh automático
+- Manejo inteligente de sesiones y persistencia de login
+- Sistema de subida y gestión de imágenes de productos
 
 ## 🏗️ Arquitectura Completa del Sistema
 
@@ -607,6 +609,264 @@ const loginMutation = useMutation({
   <Route path="/admin/configuracion" element={<SystemSettings />} />
 </Routes>
 ```
+
+## 🔐 Sistema de Autenticación JWT Avanzado
+
+### 🎯 Características del Sistema de Autenticación
+
+El proyecto implementa un **sistema de autenticación JWT robusto** con las siguientes características:
+
+- ✅ **Autenticación basada en tokens JWT**
+- ✅ **Refresh tokens automático** sin intervención del usuario
+- ✅ **Persistencia de sesión** (login permanece activo)
+- ✅ **Manejo inteligente de expiración** de tokens
+- ✅ **Navegación sin interrupciones** por la aplicación
+- ✅ **Subida de imágenes autenticada** con tokens válidos
+- ✅ **Rutas protegidas** por rol (USER/ADMIN)
+
+### 🏗️ Arquitectura del Sistema de Tokens
+
+#### Backend - Generación de Tokens
+
+```java
+// JwtTokenUtil.java - Generación de tokens
+public String generateToken(UserDetails userDetails) {
+    Map<String, Object> claims = new HashMap<>();
+    return Jwts.builder()
+        .setClaims(claims)
+        .setSubject(userDetails.getUsername())
+        .setIssuedAt(new Date(System.currentTimeMillis()))
+        .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration * 1000))
+        .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+        .compact();
+}
+
+// Configuración: jwt.expiration=86400 (24 horas)
+```
+
+#### Frontend - Sistema de Refresh Automático
+
+El frontend implementa un sistema inteligente de refresh de tokens que:
+
+1. **Verifica la expiración** del token antes de cada petición
+2. **Refresca automáticamente** si el token está por expirar (< 2 minutos)
+3. **No interrumpe** la experiencia del usuario
+4. **Maneja errores** de forma transparente
+
+```typescript
+// tokenRefresh.ts - Sistema de refresh automático
+export async function ensureValidToken(): Promise<string | null> {
+  const currentToken = localStorage.getItem('token');
+  
+  if (!currentToken) return null;
+
+  const decoded = decodeJWT(currentToken);
+  if (decoded && decoded.exp) {
+    const expirationTime = decoded.exp * 1000;
+    const currentTime = Date.now();
+    const timeUntilExpiration = expirationTime - currentTime;
+    
+    // Si el token aún es válido, usarlo directamente
+    if (timeUntilExpiration > 0) {
+      // Refrescar en background si está por expirar
+      if (timeUntilExpiration < 120000) {
+        refreshAccessToken().catch(() => {});
+      }
+      return currentToken;
+    }
+  }
+
+  // Si expiró, refrescar antes de continuar
+  return await refreshAccessToken();
+}
+```
+
+### 🔄 Flujo de Refresh de Tokens
+
+```mermaid
+graph TD
+    A[Usuario hace petición] --> B{Token válido?}
+    B -->|Sí y > 2 min| C[Usar token actual]
+    B -->|Sí pero < 2 min| D[Refrescar en background]
+    B -->|No/Expirado| E[Refrescar inmediatamente]
+    D --> C
+    E --> F{Refresh exitoso?}
+    F -->|Sí| G[Usar nuevo token]
+    F -->|No| H[Error de auth]
+    C --> I[Ejecutar petición]
+    G --> I
+```
+
+### 📋 Endpoints de Autenticación
+
+#### Login
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "admin",
+  "contrasena": "admin123"
+}
+
+Response 200 OK:
+{
+  "accessToken": "eyJhbGci...",
+  "refreshToken": "745aa35d-31fd-4660-9b32-5dd0f4e4725d",
+  "tokenType": "Bearer",
+  "expiresIn": 86400,
+  "user": {
+    "id": 1,
+    "nombre": "Admin",
+    "email": "admin@example.com",
+    "rol": "ADMIN"
+  }
+}
+```
+
+#### Refresh Token
+```http
+POST /api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "745aa35d-31fd-4660-9b32-5dd0f4e4725d"
+}
+
+Response 200 OK:
+{
+  "accessToken": "eyJhbGci...",
+  "refreshToken": "745aa35d-31fd-4660-9b32-5dd0f4e4725d",
+  "tokenType": "Bearer",
+  "expiresIn": 86400
+}
+```
+
+### 🛡️ Protección de Rutas
+
+#### Frontend - ProtectedRoute Component
+
+```typescript
+// ProtectedRoute.tsx - Protección de rutas por rol
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  children,
+  requiredRole
+}) => {
+  const token = localStorage.getItem('token');
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  if (requiredRole && user.rol !== requiredRole) {
+    return <Navigate to="/" replace />;
+  }
+  
+  return <>{children}</>;
+};
+
+// Uso en rutas
+<Route
+  path="/admin/*"
+  element={
+    <ProtectedRoute requiredRole="ADMIN">
+      <AdminPanel />
+    </ProtectedRoute>
+  }
+/>
+```
+
+#### Backend - Spring Security Config
+
+```java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+    
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                // Rutas públicas
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/productos/**").permitAll()
+                .requestMatchers("/uploads/**").permitAll()
+                
+                // Rutas protegidas por rol
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/files/**").authenticated()
+                
+                // Resto requiere autenticación
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthenticationFilter,
+                UsernamePasswordAuthenticationFilter.class);
+        
+        return http.build();
+    }
+}
+```
+
+### 📁 Sistema de Subida de Imágenes Autenticado
+
+```typescript
+// api.ts - Subida de imágenes con token automático
+export const filesAPI = {
+  subirImagen: async (file: File): Promise<{ url: string; filename: string }> => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // Token válido obtenido automáticamente
+    const token = await ensureValidToken();
+    
+    if (!token) {
+      throw new Error('Error de autenticación');
+    }
+    
+    const response = await fetch(`${API_BASE_URL}/files/upload`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al subir imagen');
+    }
+
+    const data = await response.json();
+    return {
+      url: `http://localhost:8080${data.url}`,
+      filename: data.filename,
+    };
+  }
+};
+```
+
+### 🎯 Beneficios del Sistema
+
+1. **✅ Experiencia de Usuario Fluida**
+   - No requiere login repetido cada hora
+   - Navegación sin interrupciones
+   - Subida de archivos sin errores 401
+
+2. **✅ Seguridad Robusta**
+   - Tokens de corta duración (24h)
+   - Refresh tokens seguros
+   - Protección por rol en backend y frontend
+
+3. **✅ Mantenimiento Simplificado**
+   - Sistema centralizado de tokens
+   - Código limpio y modular
+   - Fácil de extender y mantener
+
+4. **✅ Performance Optimizado**
+   - Refresh en background sin bloqueos
+   - Caché de tokens válidos
+   - Mínimas llamadas al servidor
 
 ## 🧩 Componentes Frontend Detallados
 

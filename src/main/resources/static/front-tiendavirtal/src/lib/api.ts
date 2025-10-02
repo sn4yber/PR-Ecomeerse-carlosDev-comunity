@@ -5,6 +5,8 @@
  * @created 2025-10-01
  */
 
+import { ensureValidToken } from './tokenRefresh';
+
 const API_BASE_URL = 'http://localhost:8080/api';
 
 /**
@@ -25,22 +27,22 @@ export interface Producto {
 }
 
 /**
- * Obtener token de autenticación
+ * Obtener token de autenticación (con refresh automático)
  */
-const getAuthToken = (): string | null => {
-  return localStorage.getItem('token');
+const getAuthToken = async (): Promise<string | null> => {
+  return await ensureValidToken();
 };
 
 /**
- * Headers por defecto para las peticiones
+ * Headers por defecto para las peticiones (con refresh automático de token)
  */
-const getHeaders = (includeAuth = true): HeadersInit => {
+const getHeaders = async (includeAuth = true): Promise<HeadersInit> => {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
   };
 
   if (includeAuth) {
-    const token = getAuthToken();
+    const token = await getAuthToken();
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
@@ -54,17 +56,21 @@ const getHeaders = (includeAuth = true): HeadersInit => {
  */
 export const filesAPI = {
   /**
-   * Subir una imagen
+   * Subir una imagen (con refresh automático de token)
    */
   subirImagen: async (file: File): Promise<{ url: string; filename: string }> => {
     const formData = new FormData();
     formData.append('file', file);
 
-    const token = getAuthToken();
-    const headers: HeadersInit = {};
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+    // Obtener token válido (con refresh automático si es necesario)
+    const token = await ensureValidToken();
+    
+    if (!token) {
+      throw new Error('Error de autenticación. Por favor, recarga la página e intenta nuevamente.');
     }
+    
+    const headers: HeadersInit = {};
+    headers['Authorization'] = `Bearer ${token}`;
 
     const response = await fetch(`${API_BASE_URL}/files/upload`, {
       method: 'POST',
@@ -73,11 +79,18 @@ export const filesAPI = {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Error al subir imagen');
+      let errorMsg = `Error al subir imagen (${response.status})`;
+      try {
+        const error = await response.json();
+        errorMsg = error.message || errorMsg;
+      } catch {
+        // Ignorar errores al parsear JSON
+      }
+      throw new Error(errorMsg);
     }
 
     const data = await response.json();
+    
     return {
       url: `http://localhost:8080${data.url}`,
       filename: data.filename,
@@ -90,7 +103,7 @@ export const filesAPI = {
   eliminarImagen: async (filename: string): Promise<void> => {
     const response = await fetch(`${API_BASE_URL}/files/delete/${filename}`, {
       method: 'DELETE',
-      headers: getHeaders(true),
+      headers: await getHeaders(true),
     });
 
     if (!response.ok) {
@@ -110,7 +123,7 @@ export const productosAPI = {
   obtenerTodos: async (): Promise<Producto[]> => {
     const response = await fetch(`${API_BASE_URL}/productos`, {
       method: 'GET',
-      headers: getHeaders(false),
+      headers: await getHeaders(false),
     });
 
     if (!response.ok) {
@@ -126,7 +139,7 @@ export const productosAPI = {
   obtenerPorId: async (id: number): Promise<Producto> => {
     const response = await fetch(`${API_BASE_URL}/productos/${id}`, {
       method: 'GET',
-      headers: getHeaders(false),
+      headers: await getHeaders(false),
     });
 
     if (!response.ok) {
@@ -142,7 +155,7 @@ export const productosAPI = {
   crear: async (producto: Producto): Promise<Producto> => {
     const response = await fetch(`${API_BASE_URL}/productos`, {
       method: 'POST',
-      headers: getHeaders(true),
+      headers: await getHeaders(true),
       body: JSON.stringify(producto),
     });
 
@@ -160,7 +173,7 @@ export const productosAPI = {
   actualizar: async (id: number, producto: Producto): Promise<Producto> => {
     const response = await fetch(`${API_BASE_URL}/productos/${id}`, {
       method: 'PUT',
-      headers: getHeaders(true),
+      headers: await getHeaders(true),
       body: JSON.stringify(producto),
     });
 
@@ -178,7 +191,7 @@ export const productosAPI = {
   eliminar: async (id: number): Promise<void> => {
     const response = await fetch(`${API_BASE_URL}/productos/${id}`, {
       method: 'DELETE',
-      headers: getHeaders(true),
+      headers: await getHeaders(true),
     });
 
     if (!response.ok) {
@@ -193,7 +206,7 @@ export const productosAPI = {
   obtenerDestacados: async (): Promise<Producto[]> => {
     const response = await fetch(`${API_BASE_URL}/productos/destacados`, {
       method: 'GET',
-      headers: getHeaders(false),
+      headers: await getHeaders(false),
     });
 
     if (!response.ok) {
@@ -209,7 +222,7 @@ export const productosAPI = {
   obtenerTop3Destacados: async (): Promise<Producto[]> => {
     const response = await fetch(`${API_BASE_URL}/productos/destacados/top3`, {
       method: 'GET',
-      headers: getHeaders(false),
+      headers: await getHeaders(false),
     });
 
     if (!response.ok) {
@@ -225,7 +238,7 @@ export const productosAPI = {
   marcarDestacado: async (id: number, destacado: boolean): Promise<Producto> => {
     const response = await fetch(`${API_BASE_URL}/productos/${id}/destacado?destacado=${destacado}`, {
       method: 'PATCH',
-      headers: getHeaders(true),
+      headers: await getHeaders(true),
     });
 
     if (!response.ok) {
@@ -242,7 +255,7 @@ export const productosAPI = {
   buscarPorNombre: async (nombre: string): Promise<Producto[]> => {
     const response = await fetch(`${API_BASE_URL}/productos/buscar?nombre=${encodeURIComponent(nombre)}`, {
       method: 'GET',
-      headers: getHeaders(false),
+      headers: await getHeaders(false),
     });
 
     if (!response.ok) {

@@ -5,17 +5,20 @@
  * @created 2025-09-20
  */
 
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Header, Home, Footer } from './components';
 import { Productos } from './components/pages/Productos';
 import { Carrito } from './components/pages/Carrito';
 import { Login } from './components/pages/Login';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import { AdminPanel } from './components/admin/pages/AdminPanel';
 import { ProductManagement } from './components/admin/pages/ProductManagement';
 import { UserManagement } from './components/admin/pages/UserManagement';
 import { ReportsAndStats } from './components/admin/pages/ReportsAndStats';
 import { OrderManagement } from './components/admin/pages/OrderManagement';
 import { SystemSettings } from './components/admin/pages/SystemSettings';
+import { startTokenRefreshMonitor } from './lib/tokenRefresh';
 
 /**
  * Configuración de la aplicación
@@ -31,6 +34,7 @@ const APP_CONFIG = {
  * - Orquestar el layout principal
  * - Gestionar la configuración global
  * - Proveer la estructura base de la aplicación
+ * - Iniciar el monitor de refresh automático de tokens
  * 
  * Principios SOLID aplicados:
  * - Single Responsibility: Solo orquesta componentes
@@ -39,11 +43,11 @@ const APP_CONFIG = {
  */
 function App() {
   /**
-   * SISTEMA DE LOGIN PERSISTENTE - Para implementar después
-   * 
-   * Tip: useQuery(['authStatus']) para verificar token
-   * Tip: if (!authData?.authenticated) return <Login />;
+   * Iniciar el monitor de refresh automático de tokens
    */
+  useEffect(() => {
+    startTokenRefreshMonitor();
+  }, []);
 
   return (
     <Router>
@@ -61,13 +65,37 @@ function App() {
             <Route path="/carrito" element={<Carrito />} />
             <Route path="/login" element={<Login />} />
             
-            {/* Rutas del panel de administración */}
-            <Route path="/admin" element={<AdminPanel />} />
-            <Route path="/admin/productos" element={<ProductManagement />} />
-            <Route path="/admin/usuarios" element={<UserManagement />} />
-            <Route path="/admin/reportes" element={<ReportsAndStats />} />
-            <Route path="/admin/pedidos" element={<OrderManagement />} />
-            <Route path="/admin/configuracion" element={<SystemSettings />} />
+            {/* Rutas protegidas del panel de administración */}
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <AdminPanel />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/productos" element={
+              <ProtectedRoute>
+                <ProductManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/usuarios" element={
+              <ProtectedRoute>
+                <UserManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/reportes" element={
+              <ProtectedRoute>
+                <ReportsAndStats />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/pedidos" element={
+              <ProtectedRoute>
+                <OrderManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/configuracion" element={
+              <ProtectedRoute>
+                <SystemSettings />
+              </ProtectedRoute>
+            } />
             
             {/* Ruta por defecto - redirección al home */}
             <Route path="*" element={<Home />} />

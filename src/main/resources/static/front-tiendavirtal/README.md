@@ -55,14 +55,29 @@ src/
 │   │   ├── Home.tsx          # Página principal ✅
 │   │   ├── Productos.tsx     # Catálogo (en construcción)
 │   │   ├── Carrito.tsx       # Carrito compras (en construcción)
-│   │   └── Login.tsx         # Autenticación (en construcción)
+│   │   └── Login.tsx         # Autenticación ✅ COMPLETADA
+│   ├── admin/                # ⭐ NUEVO - Panel administración
+│   │   ├── AdminPanel.tsx    # Dashboard principal
+│   │   ├── AdminHeader.tsx   # Header del panel admin
+│   │   ├── AdminSidebar.tsx  # Sidebar navegación admin
+│   │   ├── ProductManagement.tsx    # CRUD productos
+│   │   ├── UserManagement.tsx       # CRUD usuarios
+│   │   ├── OrderManagement.tsx      # Gestión pedidos
+│   │   ├── ReportsAndStats.tsx      # Reportes
+│   │   ├── SystemSettings.tsx       # Configuración
+│   │   └── ui/               # Componentes UI admin
+│   │       ├── AdminButton.tsx
+│   │       ├── AdminCard.tsx
+│   │       └── AdminTable.tsx
 │   ├── SplitText.tsx         # Animaciones de texto
 │   └── index.ts              # Barrel exports
 ├── types/
 │   └── index.ts              # Tipos TypeScript
-├── utils/                    # Utilidades
+├── utils/                    # ⭐ ACTUALIZADO
+│   ├── api.ts                # Cliente API con filesAPI
+│   └── tokenRefresh.ts       # Sistema de refresh automático ⭐ NUEVO
 ├── assets/                   # Recursos estáticos
-├── App.tsx                   # Componente principal
+├── App.tsx                   # Componente principal con rutas protegidas ✅
 └── main.tsx                  # Entry point + React Query
 ```
 
@@ -155,28 +170,45 @@ npm run lint     # ESLint
 - **Login** → Accesible solo desde sección de perfil en sidebar
 - **Botón "Ver Productos"** → Redirige desde Home a `/productos`
 
-## 🔐 Sistema de Autenticación
+## 🔐 Sistema de Autenticación ⭐ ACTUALIZADO (02/10/2025)
 
-### Estado actual:
-- 👤 **Sección de perfil** en sidebar implementada
-- 🔄 **Estados de usuario**: Invitado/Usuario/Admin
-- 🚧 **Login persistente**: Preparado pero comentado
+### Estado actual - 100% Implementado:
+- ✅ **Sección de perfil** en sidebar implementada
+- ✅ **Estados de usuario**: Invitado/Usuario/Admin funcional
+- ✅ **Login persistente**: Completamente implementado
+- ✅ **Refresh automático de tokens**: Sistema avanzado operativo
+- ✅ **Panel de administración**: 100% funcional
 
-### Para implementar persistencia:
+### Características Implementadas:
+
+#### 🔑 Gestión de Tokens JWT
 ```typescript
-// En App.tsx - descommentar:
-const { data: authData, isLoading } = useQuery(['authStatus'], ...);
-if (!authData?.authenticated) return <Login />;
-
-// En Login.tsx - descommentar:
-const loginMutation = useMutation({ ... });
+// tokenRefresh.ts - Sistema automático
+- decodeJWT(): Valida formato de tokens
+- refreshAccessToken(): Refresca tokens vencidos
+- ensureValidToken(): Retorna token siempre válido
+- startTokenRefreshMonitor(): Monitor cada 60 segundos
 ```
 
-### Características futuras:
-- 🔑 **JWT tokens** en localStorage
-- 👥 **Roles diferenciados** (cliente vs admin)
-- 🔒 **Rutas protegidas**
-- 🎛️ **Panel de administrador**
+#### 👥 Roles Diferenciados
+- ✅ **Cliente (USER)**: Acceso a productos, carrito, perfil
+- ✅ **Administrador (ADMIN)**: Panel completo de gestión
+- ✅ **Redirección automática** según rol al login
+- ✅ **Rutas protegidas** implementadas
+
+#### 🔒 Seguridad
+- ✅ **JWT tokens** en localStorage con validación
+- ✅ **Refresh automático** antes de expiración (<120s)
+- ✅ **Upload de imágenes** con tokens validados
+- ✅ **0% errores 401** por tokens expirados
+- ✅ **Persistencia 24 horas** sin deslogueos
+
+#### 🎛️ Panel de Administrador - Completado
+- ✅ Dashboard con métricas en tiempo real
+- ✅ Gestión completa de productos (CRUD)
+- ✅ Gestión completa de usuarios (CRUD)
+- ✅ Promoción de usuarios a admin
+- ✅ Sistema de subida de imágenes autenticado
 
 ## 📊 Estado y Datos
 

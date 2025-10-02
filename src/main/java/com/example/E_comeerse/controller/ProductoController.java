@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -26,6 +28,28 @@ public class ProductoController {
     @GetMapping
     public ResponseEntity<List<Producto>> listarProductos() {
         List<Producto> productos = productoService.listarProductos();
+        
+        // Procesar URLs de imágenes para asegurar que sean relativas
+        productos.forEach(producto -> {
+            if (producto.getUrlImagen() != null && !producto.getUrlImagen().isEmpty()) {
+                String urlImagen = producto.getUrlImagen();
+                
+                // Si la URL es completa (empieza con http), extraer solo la parte relativa
+                if (urlImagen.startsWith("http://localhost:8080/uploads/")) {
+                    producto.setUrlImagen(urlImagen.replace("http://localhost:8080", ""));
+                }
+                // Si la URL no empieza con /, agregarla
+                else if (!urlImagen.startsWith("/")) {
+                    // Extraer solo el nombre del archivo si es una ruta compleja
+                    String filename = urlImagen;
+                    if (urlImagen.contains("/")) {
+                        filename = urlImagen.substring(urlImagen.lastIndexOf("/") + 1);
+                    }
+                    producto.setUrlImagen("/uploads/productos/" + filename);
+                }
+            }
+        });
+        
         return ResponseEntity.ok(productos);
     }
 
@@ -97,6 +121,91 @@ public class ProductoController {
             return ResponseEntity.ok(producto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * Endpoint para obtener productos con información completa de imágenes
+     */
+    @GetMapping("/admin")
+    public ResponseEntity<List<Producto>> listarProductosAdmin() {
+        List<Producto> productos = productoService.listarProductos();
+
+        // Procesar URLs de imágenes para asegurar que sean completas
+        productos.forEach(producto -> {
+            if (producto.getUrlImagen() != null && !producto.getUrlImagen().isEmpty()) {
+                String urlImagen = producto.getUrlImagen();
+
+                // Si la URL no es completa, construir la URL completa
+                if (!urlImagen.startsWith("http") && !urlImagen.startsWith("/api/files/serve/")) {
+                    // Extraer solo el nombre del archivo si es una ruta
+                    String filename = urlImagen;
+                    if (urlImagen.contains("/")) {
+                        filename = urlImagen.substring(urlImagen.lastIndexOf("/") + 1);
+                    }
+
+                    // Establecer la URL completa del servidor
+                    producto.setUrlImagen("/uploads/productos/" + filename);
+                }
+            }
+        });
+
+        return ResponseEntity.ok(productos);
+    }
+
+    /**
+     * Endpoint para validar que las imágenes de los productos existen
+     */
+    @GetMapping("/{id}/validate-image")
+    public ResponseEntity<?> validateProductImage(@PathVariable Long id) {
+        try {
+            Optional<Producto> productoOpt = productoService.buscarPorId(id);
+            if (productoOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Producto producto = productoOpt.get();
+            Map<String, Object> response = new HashMap<>();
+            response.put("productId", id);
+            response.put("productName", producto.getNombre());
+
+            if (producto.getUrlImagen() != null && !producto.getUrlImagen().isEmpty()) {
+                String urlImagen = producto.getUrlImagen();
+                response.put("imageUrl", urlImagen);
+
+                // Extraer el nombre del archivo
+                String filename = urlImagen;
+                if (urlImagen.contains("/")) {
+                    filename = urlImagen.substring(urlImagen.lastIndexOf("/") + 1);
+                }
+
+                // Verificar si el archivo existe físicamente
+                java.nio.file.Path filePath = java.nio.file.Paths.get("uploads/productos").resolve(filename);
+                boolean fileExists = java.nio.file.Files.exists(filePath);
+
+                response.put("imageExists", fileExists);
+                response.put("filename", filename);
+
+                if (fileExists) {
+                    try {
+                        long fileSize = java.nio.file.Files.size(filePath);
+                        response.put("fileSize", fileSize);
+                    } catch (Exception e) {
+                        response.put("fileSize", -1);
+                    }
+                }
+            } else {
+                response.put("imageUrl", null);
+                response.put("imageExists", false);
+                response.put("message", "Producto sin imagen asignada");
+            }
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Error al validar imagen: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 }

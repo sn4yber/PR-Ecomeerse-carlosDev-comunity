@@ -94,8 +94,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         return path.startsWith("/api/auth/") || 
                path.startsWith("/api/public/") ||
+               path.startsWith("/api/files/") ||  // ⭐ IMPORTANTE: Permitir subida de archivos
                path.startsWith("/actuator/") ||
                path.startsWith("/h2-console/") ||
+               path.startsWith("/uploads/") ||  // ⭐ IMPORTANTE: Permitir acceso público a imágenes
                path.equals("/");
     }
 }

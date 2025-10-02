@@ -149,6 +149,84 @@ public class FileUploadController {
     }
 
     /**
+     * Endpoint para servir imágenes directamente
+     *
+     * @param filename Nombre del archivo de imagen
+     * @return ResponseEntity con la imagen
+     */
+    @GetMapping("/serve/{filename}")
+    public ResponseEntity<org.springframework.core.io.Resource> serveFile(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get(uploadPath).resolve(filename);
+            org.springframework.core.io.Resource resource = new org.springframework.core.io.UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                // Determinar el tipo de contenido
+                String contentType = "application/octet-stream";
+                try {
+                    contentType = Files.probeContentType(filePath);
+                    if (contentType == null) {
+                        // Fallback basado en extensión
+                        String extension = filename.toLowerCase();
+                        if (extension.endsWith(".jpg") || extension.endsWith(".jpeg")) {
+                            contentType = "image/jpeg";
+                        } else if (extension.endsWith(".png")) {
+                            contentType = "image/png";
+                        }
+                    }
+                } catch (Exception e) {
+                    // Usar tipo por defecto si no se puede determinar
+                }
+
+                return ResponseEntity.ok()
+                    .header("Content-Type", contentType)
+                    .header("Cache-Control", "max-age=3600") // Cache por 1 hora
+                    .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * Endpoint para obtener información de un archivo
+     *
+     * @param filename Nombre del archivo
+     * @return ResponseEntity con información del archivo
+     */
+    @GetMapping("/info/{filename}")
+    public ResponseEntity<?> getFileInfo(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get(uploadPath).resolve(filename);
+
+            if (Files.exists(filePath)) {
+                Map<String, Object> fileInfo = new HashMap<>();
+                fileInfo.put("filename", filename);
+                fileInfo.put("size", Files.size(filePath));
+                fileInfo.put("url", "/uploads/productos/" + filename);
+                fileInfo.put("serveUrl", "/api/files/serve/" + filename);
+                fileInfo.put("exists", true);
+
+                return ResponseEntity.ok(fileInfo);
+            } else {
+                Map<String, Object> errorInfo = new HashMap<>();
+                errorInfo.put("filename", filename);
+                errorInfo.put("exists", false);
+                errorInfo.put("message", "Archivo no encontrado");
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorInfo);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(createErrorResponse("Error al obtener información del archivo: " + e.getMessage()));
+        }
+    }
+
+    /**
      * Valida si el tipo de contenido es una imagen válida
      */
     private boolean isValidImageType(String contentType) {

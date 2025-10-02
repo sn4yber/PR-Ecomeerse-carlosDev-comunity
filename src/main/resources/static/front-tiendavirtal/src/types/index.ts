@@ -24,6 +24,15 @@ export interface HeaderProps {
 }
 
 /**
+ * Perfil de usuario
+ */
+export interface UserProfile {
+  name: string;
+  role: 'admin' | 'user' | 'guest';
+  avatar?: string | null;
+}
+
+/**
  * Estado del menú lateral
  */
 export interface SidebarState {

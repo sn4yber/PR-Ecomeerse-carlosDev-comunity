@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import type { HeaderProps } from '../../types';
+import type { HeaderProps, UserProfile } from '../../types';
 
 /**
  * Icono de configuración/admin
@@ -74,14 +74,37 @@ export const Header: React.FC<HeaderProps> = ({
   className = "" 
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  // Estado temporal para el login (después se integrará con el sistema de autenticación)
-  // Por ahora siempre invitado, los botones redirigen a las páginas correspondientes
-  const [isLoggedIn] = useState(false);
-  const [userProfile] = useState({
-    name: 'Usuario Invitado',
-    role: 'guest', // 'admin', 'user', 'guest'
-    avatar: null
-  });
+  
+  // Función para verificar si el usuario está autenticado
+  const isAuthenticated = (): boolean => {
+    return !!localStorage.getItem("token");
+  };
+
+  // Función para obtener información del usuario
+  const getUserInfo = (): UserProfile => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        return { name: 'Usuario Invitado', role: 'guest', avatar: null };
+      }
+      
+      const userStr = localStorage.getItem("user");
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        return {
+          name: user.nombre || user.name || 'Usuario',
+          role: user.role || 'user',
+          avatar: null
+        };
+      }
+      return { name: 'Usuario', role: 'user', avatar: null };
+    } catch {
+      return { name: 'Usuario Invitado', role: 'guest', avatar: null };
+    }
+  };
+
+  const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
+  const [userProfile, setUserProfile] = useState<UserProfile>(getUserInfo());
 
   /**
    * Alternar el estado del sidebar
@@ -102,24 +125,36 @@ export const Header: React.FC<HeaderProps> = ({
    */
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === 'Escape' && isSidebarOpen) {
         closeSidebar();
       }
     };
 
-    if (isSidebarOpen) {
-      document.addEventListener('keydown', handleEscape);
-      // Prevenir scroll del body cuando el sidebar está abierto
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isSidebarOpen]);
+
+  // Actualizar estado de autenticación cuando cambie localStorage
+  useEffect(() => {
+    const checkAuth = () => {
+      const authenticated = isAuthenticated();
+      const userInfo = getUserInfo();
+      setIsLoggedIn(authenticated);
+      setUserProfile(userInfo);
+    };
+
+    // Verificar auth al montar y cuando cambie el storage
+    checkAuth();
+    window.addEventListener('storage', checkAuth);
+    
+    // También verificar periódicamente por si se actualiza en la misma pestaña
+    const interval = setInterval(checkAuth, 1000);
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = '';
+      window.removeEventListener('storage', checkAuth);
+      clearInterval(interval);
     };
-  }, [isSidebarOpen]);
+  }, []);
 
   return (
     <>
@@ -192,9 +227,9 @@ export const Header: React.FC<HeaderProps> = ({
               <CartIcon className="w-6 h-6 text-gray-700" />
             </Link>
             
-            {/* Botón de usuario/perfil - Redirecciona al login */}
+            {/* Botón de usuario/perfil - Redirecciona según estado de autenticación */}
             <Link 
-              to="/login"
+              to={isLoggedIn ? "/admin" : "/login"}
               className="
                 flex items-center justify-center w-10 h-10 rounded-lg
                 hover:bg-gradient-to-br hover:from-purple-100 hover:to-gray-100
@@ -203,9 +238,13 @@ export const Header: React.FC<HeaderProps> = ({
                 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
                 no-underline
               "
-              aria-label="Ir al login"
+              aria-label={isLoggedIn ? "Ir al panel de administración" : "Ir al login"}
             >
-              <UserIcon className="w-6 h-6 text-gray-700" />
+              {isLoggedIn ? (
+                <AdminIcon className="w-6 h-6 text-purple-600" />
+              ) : (
+                <UserIcon className="w-6 h-6 text-gray-700" />
+              )}
             </Link>
           </div>
         </div>
@@ -312,20 +351,32 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             ) : (
               <div className="space-y-2">
-                {userProfile.role === 'admin' && (
-                  <button className="
+                <Link 
+                  to="/admin"
+                  onClick={closeSidebar}
+                  className="
                     w-full px-3 py-2 text-sm font-medium text-white
                     bg-gradient-to-r from-purple-600 to-gray-800
                     hover:from-purple-700 hover:to-gray-900
                     rounded-lg transition-all duration-200
                     focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
                     flex items-center justify-center space-x-2
-                  ">
-                    <AdminIcon className="w-4 h-4" />
-                    <span>Panel de Admin</span>
-                  </button>
-                )}
+                    no-underline
+                  "
+                >
+                  <AdminIcon className="w-4 h-4" />
+                  <span>Panel de Admin</span>
+                </Link>
                 <button 
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("refreshToken");
+                    localStorage.removeItem("user");
+                    setIsLoggedIn(false);
+                    setUserProfile({ name: 'Usuario Invitado', role: 'guest' });
+                    closeSidebar();
+                    window.location.href = '/login';
+                  }}
                   className="
                     w-full px-3 py-2 text-sm font-medium text-gray-700
                     border border-gray-300 
