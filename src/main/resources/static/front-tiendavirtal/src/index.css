@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Estilos para modales - Máxima prioridad */
+[data-modal] {
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 /* Clases básicas para modo oscuro */
 html.dark {
   background-color: #111827;

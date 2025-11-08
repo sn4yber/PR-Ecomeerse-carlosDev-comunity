@@ -9,3 +9,7 @@ export * from './layout';
 
 // Page components
 export * from './pages';
+
+// Route protection
+export { ProtectedRoute } from './ProtectedRoute';
+export { AdminRoute } from './AdminRoute';

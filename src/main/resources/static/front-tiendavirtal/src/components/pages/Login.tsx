@@ -6,6 +6,7 @@
  */
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 
 export interface LoginProps {
@@ -45,11 +46,11 @@ export const Login: React.FC<LoginProps> = ({ className = "" }) => {
         
         // Verificar si es administrador y redirigir al panel correspondiente
         if (data.user.rol === "ADMIN") {
-          console.log("Redirigiendo a panel de admin"); // Debug log
+          console.log("✅ Usuario ADMIN - Redirigiendo a panel de admin"); // Debug log
           window.location.href = "/admin"; // Redirección al panel de admin
         } else {
-          console.log("Redirigiendo a dashboard normal"); // Debug log
-          window.location.href = "/dashboard"; // Redirección normal para usuarios
+          console.log("✅ Usuario normal - Redirigiendo a home"); // Debug log
+          window.location.href = "/"; // Redirección normal a home
         }
       } else {
         console.log("No hay información del usuario, redirigiendo a dashboard"); // Debug log
@@ -166,6 +167,16 @@ export const Login: React.FC<LoginProps> = ({ className = "" }) => {
                 </>
               )}
             </button>
+
+            {/* Link a Registro */}
+            <div className="text-center pt-4">
+              <p className="text-sm text-gray-600">
+                ¿No tienes una cuenta?{' '}
+                <Link to="/register" className="text-purple-600 hover:text-purple-700 font-medium">
+                  Regístrate aquí
+                </Link>
+              </p>
+            </div>
           </form>
         </div>
       </div>

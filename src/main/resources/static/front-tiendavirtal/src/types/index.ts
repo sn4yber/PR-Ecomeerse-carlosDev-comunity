@@ -65,3 +65,34 @@ export interface FooterSection {
   title: string;
   links: FooterLink[];
 }
+
+/**
+ * Re-exportar tipos del carrito
+ */
+export type {
+  Cart,
+  CartItem,
+  AgregarProductoRequest,
+  ActualizarCantidadRequest,
+  CheckoutResponse,
+  VerificarStockResponse,
+  CantidadItemsResponse,
+  CarritoProps,
+  CartItemProps,
+  CartSummaryProps,
+  CartEmptyProps,
+  CartContextState,
+  CartContextActions,
+  CartContextType,
+} from './cart';
+
+/**
+ * Re-exportar tipos de usuario
+ */
+export type {
+  Usuario,
+  CrearUsuarioRequest,
+  ActualizarUsuarioRequest,
+  FiltrosUsuarios,
+  EstadisticasUsuarios,
+} from './usuario';

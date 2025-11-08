@@ -56,6 +56,9 @@ public class SecurityConfig {
                 // Endpoints públicos de autenticación
                 .requestMatchers("/api/auth/login", "/api/auth/refresh").permitAll()
                 
+                // Endpoint público de registro de usuarios
+                .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+                
                 // Endpoints públicos generales
                 .requestMatchers("/api/public/**").permitAll()
                 
@@ -83,6 +86,9 @@ public class SecurityConfig {
 
                 // Endpoints de administrador - SOLO ADMINS
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                
+                // Endpoints de gestión de pedidos (admin)
+                .requestMatchers("/api/pedidos/admin/**").hasRole("ADMIN")
 
                 // Todos los demás endpoints requieren autenticación
                 .anyRequest().authenticated()

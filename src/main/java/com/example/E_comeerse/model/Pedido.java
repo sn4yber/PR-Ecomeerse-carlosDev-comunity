@@ -57,6 +57,34 @@ public class Pedido {
     @Column(name = "id_direccion_facturacion")
     private Long idDireccionFacturacion;
 
+    // Datos de facturación
+    @Column(name = "numero_ticket", length = 50)
+    private String numeroTicket;
+
+    @Column(name = "cliente_nombre", length = 200)
+    private String clienteNombre;
+
+    @Column(name = "cliente_identificacion", length = 50)
+    private String clienteIdentificacion;
+
+    @Column(name = "cliente_telefono", length = 20)
+    private String clienteTelefono;
+
+    @Column(name = "cliente_email", length = 100)
+    private String clienteEmail;
+
+    @Column(name = "cliente_direccion", length = 300)
+    private String clienteDireccion;
+
+    @Column(name = "cliente_ciudad", length = 100)
+    private String clienteCiudad;
+
+    @Column(name = "cliente_pais", length = 100)
+    private String clientePais;
+
+    @Column(name = "metodo_pago", length = 50)
+    private String metodoPago;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_pago")
     private EstadoPago estadoPago = EstadoPago.PENDIENTE;
@@ -137,4 +165,32 @@ public class Pedido {
 
     public LocalDateTime getFechaModificacion() { return fechaModificacion; }
     public void setFechaModificacion(LocalDateTime fechaModificacion) { this.fechaModificacion = fechaModificacion; }
+
+    // Getters y Setters para datos de facturación
+    public String getNumeroTicket() { return numeroTicket; }
+    public void setNumeroTicket(String numeroTicket) { this.numeroTicket = numeroTicket; }
+
+    public String getClienteNombre() { return clienteNombre; }
+    public void setClienteNombre(String clienteNombre) { this.clienteNombre = clienteNombre; }
+
+    public String getClienteIdentificacion() { return clienteIdentificacion; }
+    public void setClienteIdentificacion(String clienteIdentificacion) { this.clienteIdentificacion = clienteIdentificacion; }
+
+    public String getClienteTelefono() { return clienteTelefono; }
+    public void setClienteTelefono(String clienteTelefono) { this.clienteTelefono = clienteTelefono; }
+
+    public String getClienteEmail() { return clienteEmail; }
+    public void setClienteEmail(String clienteEmail) { this.clienteEmail = clienteEmail; }
+
+    public String getClienteDireccion() { return clienteDireccion; }
+    public void setClienteDireccion(String clienteDireccion) { this.clienteDireccion = clienteDireccion; }
+
+    public String getClienteCiudad() { return clienteCiudad; }
+    public void setClienteCiudad(String clienteCiudad) { this.clienteCiudad = clienteCiudad; }
+
+    public String getClientePais() { return clientePais; }
+    public void setClientePais(String clientePais) { this.clientePais = clientePais; }
+
+    public String getMetodoPago() { return metodoPago; }
+    public void setMetodoPago(String metodoPago) { this.metodoPago = metodoPago; }
 }

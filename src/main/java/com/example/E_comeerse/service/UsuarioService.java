@@ -34,6 +34,15 @@ public class UsuarioService {
         if(usuarioRepository.existsByNombreUsuario(usuario.getNombreUsuario())){
             throw new IllegalArgumentException("ya existe este usuario ");
         }
+        
+        // Encriptar la contraseña antes de guardar
+        if (usuario.getContrasena() != null && !usuario.getContrasena().isEmpty()) {
+            // Solo encriptar si la contraseña no está ya encriptada (verificar si tiene formato BCrypt)
+            if (!usuario.getContrasena().startsWith("$2a$")) {
+                usuario.setContrasena(passwordEncoder.encode(usuario.getContrasena()));
+            }
+        }
+        
         return usuarioRepository.save(usuario);
     }
 

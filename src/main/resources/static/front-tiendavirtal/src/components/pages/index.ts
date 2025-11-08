@@ -6,3 +6,9 @@
 
 export { Home } from './Home';
 export type { HomeProps } from './Home';
+
+export { Login } from './Login';
+export type { LoginProps } from './Login';
+
+export { Register } from './Register';
+export type { RegisterProps } from './Register';

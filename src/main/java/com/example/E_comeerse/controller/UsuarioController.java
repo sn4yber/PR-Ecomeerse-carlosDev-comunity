@@ -1,11 +1,14 @@
 package com.example.E_comeerse.controller;
 
+import com.example.E_comeerse.model.Role;
 import com.example.E_comeerse.model.Usuario;
 import com.example.E_comeerse.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,8 +36,27 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<?> crearUsuario(@Valid @RequestBody Usuario usuario) {
+    public ResponseEntity<?> crearUsuario(
+            @Valid @RequestBody Usuario usuario, 
+            Authentication authentication) {
         try {
+            // Si no hay autenticación (registro público), FORZAR rol USER
+            if (authentication == null || !authentication.isAuthenticated()) {
+                usuario.setRol(Role.USER);
+            } 
+            // Si hay autenticación, verificar si es ADMIN
+            else {
+                boolean esAdmin = authentication.getAuthorities()
+                    .contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                
+                // Si NO es ADMIN, solo puede crear usuarios con rol USER
+                if (!esAdmin) {
+                    usuario.setRol(Role.USER);
+                }
+                // Si es ADMIN, puede usar el rol que venga en el request
+                // (no hacemos nada, usamos el rol que ya tiene el objeto)
+            }
+            
             Usuario usuarioGuardado = usuarioService.guardarUsuario(usuario);
             return ResponseEntity.status(HttpStatus.CREATED).body(usuarioGuardado);
         } catch (IllegalArgumentException e) {

@@ -70,4 +70,77 @@ public class PedidoController {
         List<Pedido> pedidos = pedidoService.obtenerPedidosPorEstado(estado);
         return ResponseEntity.ok(pedidos);
     }
+
+    // ========== ENDPOINTS PARA ADMINISTRACIÓN ==========
+
+    /**
+     * Obtener pedidos con filtros para administración
+     * GET /api/pedidos/admin/lista?search=&estadoPedido=&estadoPago=
+     */
+    @GetMapping("/admin/lista")
+    public ResponseEntity<?> obtenerPedidosAdmin(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String estadoPedido,
+            @RequestParam(required = false) String estadoPago
+    ) {
+        try {
+            return ResponseEntity.ok(pedidoService.obtenerPedidosConFiltros(search, estadoPedido, estadoPago));
+        } catch (Exception e) {
+            // Log the full exception
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener pedidos: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Obtener detalle completo de un pedido
+     * GET /api/pedidos/admin/{id}
+     */
+    @GetMapping("/admin/{id}")
+    public ResponseEntity<?> obtenerDetallePedidoAdmin(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(pedidoService.obtenerDetallePedido(id));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Pedido no encontrado: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener pedido: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Actualizar estado de un pedido
+     * PUT /api/pedidos/admin/{id}/estado
+     */
+    @PutMapping("/admin/{id}/estado")
+    public ResponseEntity<?> actualizarEstadoPedido(
+            @PathVariable Long id,
+            @Valid @RequestBody com.example.E_comeerse.dto.ActualizarEstadoPedidoDto dto
+    ) {
+        try {
+            return ResponseEntity.ok(pedidoService.actualizarEstadoPedido(id, dto));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar pedido: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Obtener estadísticas de pedidos
+     * GET /api/pedidos/admin/stats
+     */
+    @GetMapping("/admin/stats")
+    public ResponseEntity<?> obtenerEstadisticas() {
+        try {
+            return ResponseEntity.ok(pedidoService.obtenerEstadisticas());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener estadísticas: " + e.getMessage());
+        }
+    }
 }

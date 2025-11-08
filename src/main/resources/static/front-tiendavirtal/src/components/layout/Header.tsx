@@ -8,6 +8,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import type { HeaderProps, UserProfile } from '../../types';
+import { useCart } from '../../hooks/useCart';
 
 /**
  * Icono de configuración/admin
@@ -27,6 +28,46 @@ const CartIcon: React.FC<{ className?: string }> = ({ className = "w-6 h-6" }) =
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 7H19m-8-7V9a3 3 0 116 0v4m-6 0v7" />
   </svg>
 );
+
+/**
+ * Componente del botón de carrito con contador
+ */
+const CartButton: React.FC = () => {
+  const { itemCount } = useCart();
+
+  return (
+    <Link 
+      to="/carrito"
+      className="
+        relative flex items-center justify-center w-10 h-10 rounded-lg
+        hover:bg-gradient-to-br hover:from-purple-100 hover:to-gray-100
+        active:bg-gradient-to-br active:from-purple-200 active:to-gray-200
+        transition-all duration-200
+        focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+        no-underline
+      "
+      aria-label={`Ir al carrito (${itemCount} items)`}
+    >
+      <CartIcon className="w-6 h-6 text-gray-700" />
+      
+      {/* Badge contador de items */}
+      {itemCount > 0 && (
+        <span className="
+          absolute -top-1 -right-1
+          flex items-center justify-center
+          min-w-[1.25rem] h-5 px-1
+          text-xs font-bold text-white
+          bg-gradient-to-r from-purple-600 to-pink-600
+          rounded-full
+          shadow-lg
+          animate-pulse
+        ">
+          {itemCount > 99 ? '99+' : itemCount}
+        </span>
+      )}
+    </Link>
+  );
+};
 
 /**
  * Icono de usuario/perfil
@@ -276,21 +317,8 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Botones de acción */}
           <div className="flex items-center space-x-2">
-            {/* Botón de carrito */}
-            <Link 
-              to="/carrito"
-              className="
-                flex items-center justify-center w-10 h-10 rounded-lg
-                hover:bg-gradient-to-br hover:from-purple-100 hover:to-gray-100
-                active:bg-gradient-to-br active:from-purple-200 active:to-gray-200
-                transition-all duration-200
-                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
-                no-underline
-              "
-              aria-label="Ir al carrito"
-            >
-              <CartIcon className="w-6 h-6 text-gray-700" />
-            </Link>
+            {/* Botón de carrito con contador */}
+            <CartButton />
             
             {/* Botón de usuario/perfil - Redirecciona según estado de autenticación */}
             <Link 

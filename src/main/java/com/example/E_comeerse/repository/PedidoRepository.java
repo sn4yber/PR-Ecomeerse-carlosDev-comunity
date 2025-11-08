@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -29,4 +30,27 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     
     @Query("SELECT COUNT(p) FROM Pedido p WHERE p.idUsuario = :idUsuario")
     Long countPedidosByUsuario(@Param("idUsuario") Long idUsuario);
+    
+    // Consultas para gestión de pedidos
+    @Query(value = "SELECT * FROM pedidos p WHERE " +
+           "(:search IS NULL OR p.numero_pedido ILIKE CONCAT('%', :search, '%') OR " +
+           "p.cliente_nombre ILIKE CONCAT('%', :search, '%') OR " +
+           "p.cliente_email ILIKE CONCAT('%', :search, '%')) AND " +
+           "(:estadoPedido IS NULL OR p.estado_pedido = :estadoPedido) AND " +
+           "(:estadoPago IS NULL OR p.estado_pago = :estadoPago) " +
+           "ORDER BY p.fecha_creacion DESC", nativeQuery = true)
+    List<Pedido> findPedidosConFiltros(
+        @Param("search") String search,
+        @Param("estadoPedido") String estadoPedido,
+        @Param("estadoPago") String estadoPago
+    );
+    
+    @Query("SELECT COUNT(p) FROM Pedido p WHERE p.estadoPedido = :estado")
+    Long countByEstadoPedido(@Param("estado") Pedido.EstadoPedido estado);
+    
+    @Query("SELECT SUM(p.montoTotal) FROM Pedido p WHERE p.estadoPago = 'COMPLETADO'")
+    BigDecimal calcularTotalVentas();
+    
+    @Query("SELECT SUM(p.montoTotal) FROM Pedido p WHERE p.estadoPago = 'COMPLETADO' AND p.fechaCreacion >= :fechaInicio")
+    BigDecimal calcularVentasPorPeriodo(@Param("fechaInicio") LocalDateTime fechaInicio);
 }

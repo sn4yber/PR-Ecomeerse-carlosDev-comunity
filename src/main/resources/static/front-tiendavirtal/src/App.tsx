@@ -11,7 +11,8 @@ import { Header, Home, Footer } from './components';
 import { Productos } from './components/pages/Productos';
 import { Carrito } from './components/pages/Carrito';
 import { Login } from './components/pages/Login';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { Register } from './components/pages/Register';
+import { AdminRoute } from './components/AdminRoute';
 import { AdminPanel } from './components/admin/pages/AdminPanel';
 import { ProductManagement } from './components/admin/pages/ProductManagement';
 import { UserManagement } from './components/admin/pages/UserManagement';
@@ -64,37 +65,38 @@ function App() {
             <Route path="/productos" element={<Productos />} />
             <Route path="/carrito" element={<Carrito />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             
-            {/* Rutas protegidas del panel de administración */}
+            {/* Rutas protegidas del panel de administración - Solo ADMIN */}
             <Route path="/admin" element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <AdminPanel />
-              </ProtectedRoute>
+              </AdminRoute>
             } />
             <Route path="/admin/productos" element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <ProductManagement />
-              </ProtectedRoute>
+              </AdminRoute>
             } />
             <Route path="/admin/usuarios" element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <UserManagement />
-              </ProtectedRoute>
+              </AdminRoute>
             } />
             <Route path="/admin/reportes" element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <ReportsAndStats />
-              </ProtectedRoute>
+              </AdminRoute>
             } />
             <Route path="/admin/pedidos" element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <OrderManagement />
-              </ProtectedRoute>
+              </AdminRoute>
             } />
             <Route path="/admin/configuracion" element={
-              <ProtectedRoute>
+              <AdminRoute>
                 <SystemSettings />
-              </ProtectedRoute>
+              </AdminRoute>
             } />
             
             {/* Ruta por defecto - redirección al home */}

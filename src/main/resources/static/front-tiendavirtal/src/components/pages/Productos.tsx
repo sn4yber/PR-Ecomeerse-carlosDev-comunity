@@ -9,8 +9,10 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
+import { ShoppingCart, Check } from 'lucide-react';
 import { productosAPI, type Producto } from '../../lib/api';
 import { resolveImageUrl } from '../../lib/utils';
+import { useCart } from '../../hooks/useCart';
 
 /**
  * Props del componente Productos
@@ -38,6 +40,11 @@ export const Productos: React.FC<ProductosProps> = ({ className = "" }) => {
   const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('todas');
+  const [addedProducts, setAddedProducts] = useState<Set<number>>(new Set());
+  const [isAddingToCart, setIsAddingToCart] = useState<number | null>(null);
+
+  // Hook del carrito
+  const { addToCart, refreshItemCount } = useCart();
 
   // Categorías disponibles
   const categorias = [
@@ -73,6 +80,46 @@ export const Productos: React.FC<ProductosProps> = ({ className = "" }) => {
     
     return matchesSearch && matchesCategory;
   });
+
+  /**
+   * Maneja agregar producto al carrito
+   */
+  const handleAddToCart = async (producto: Producto) => {
+    // Validar que el producto tenga ID
+    if (!producto.id) {
+      alert('Producto inválido');
+      return;
+    }
+
+    try {
+      setIsAddingToCart(producto.id);
+      
+      await addToCart(producto.id, 1);
+
+      // Actualizar contador del carrito
+      await refreshItemCount();
+
+      // Marcar producto como agregado
+      setAddedProducts(prev => new Set(prev).add(producto.id!));
+
+      // Quitar la marca después de 2 segundos
+      setTimeout(() => {
+        setAddedProducts(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(producto.id!);
+          return newSet;
+        });
+      }, 2000);
+
+    } catch (error) {
+      console.error('Error al agregar al carrito:', error);
+      alert('Error al agregar el producto al carrito. Por favor, inicia sesión.');
+    } finally {
+      setIsAddingToCart(null);
+    }
+  };
+
+
 
   return (
     <main className={`min-h-screen bg-gray-50 ${className}`}>
@@ -269,14 +316,34 @@ export const Productos: React.FC<ProductosProps> = ({ className = "" }) => {
 
                       {/* Botón de acción */}
                       <button 
-                        className={`w-full py-2 px-4 rounded-lg font-semibold transition-all duration-200 ${
+                        onClick={() => handleAddToCart(producto)}
+                        className={`w-full py-2 px-4 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
                           producto.cantidadStock > 0
-                            ? 'bg-gradient-to-r from-purple-600 to-gray-800 hover:from-purple-700 hover:to-gray-900 text-white hover:scale-105'
+                            ? producto.id && addedProducts.has(producto.id)
+                              ? 'bg-green-600 hover:bg-green-700 text-white'
+                              : 'bg-gradient-to-r from-purple-600 to-gray-800 hover:from-purple-700 hover:to-gray-900 text-white hover:scale-105'
                             : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         }`}
-                        disabled={producto.cantidadStock === 0}
+                        disabled={producto.cantidadStock === 0 || isAddingToCart === producto.id}
                       >
-                        {producto.cantidadStock > 0 ? 'Agregar al Carrito' : 'Sin Stock'}
+                        {isAddingToCart === producto.id ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                            <span>Agregando...</span>
+                          </>
+                        ) : producto.id && addedProducts.has(producto.id) ? (
+                          <>
+                            <Check size={18} />
+                            <span>¡Agregado!</span>
+                          </>
+                        ) : producto.cantidadStock > 0 ? (
+                          <>
+                            <ShoppingCart size={18} />
+                            <span>Agregar al Carrito</span>
+                          </>
+                        ) : (
+                          <span>Sin Stock</span>
+                        )}
                       </button>
                     </div>
                   </div>

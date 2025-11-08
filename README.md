@@ -1,5 +1,30 @@
 # 🛒 E-Commerce - NebulaTech TiendaVirtual
 
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.5-green.svg)](https://spring.io/projects/spring-boot)
+[![React](https://img.shields.io/badge/React-19.1.1-61DAFB.svg)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue.svg)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
+
+## 🎉 ¡Novedades v3.0.0!
+
+> **✨ Sistema Completo de Gestión de Usuarios y Autenticación Implementado**
+
+Esta versión introduce un **sistema integral de usuarios** con registro público, autenticación por roles, autocompletado de datos en checkout y trazabilidad completa de pedidos. ¡La experiencia de usuario ha sido mejorada significativamente!
+
+**Nuevas funcionalidades destacadas:**
+- 👥 **Registro de usuarios** sin autenticación previa en `/register`
+- 🔐 **Login inteligente** con detección automática de rol (ADMIN/USER)
+- 🛡️ **Protección de rutas** administrativas con `AdminRoute`
+- 🛒 **Autocompletado** de datos personales en el checkout
+- 📊 **Panel de administración** de usuarios con CRUD completo
+- 🔒 **Encriptación BCrypt** de contraseñas
+- 📦 **Trazabilidad** de pedidos vinculados a usuarios
+
+[Ver Changelog completo](#-changelog---historial-de-cambios) | [Ver Sistema de Usuarios](#-sistema-de-gestión-de-usuarios-completo)
+
+---
+
 ## 📋 Descripción Completa
 
 **NebulaTech E-Commerce** es un proyecto colaborativo de tienda virtual desarrollado con arquitectura full-stack moderna. Combina **Spring Boot** para el backend API REST con **React + TypeScript** para el frontend, creando una aplicación escalable para gestión completa de productos gaming, usuarios y pedidos en línea.
@@ -12,6 +37,10 @@
 - Sistema de autenticación JWT robusto con refresh automático
 - Manejo inteligente de sesiones y persistencia de login
 - Sistema de subida y gestión de imágenes de productos
+- **✨ NUEVO:** Sistema completo de registro de usuarios con roles
+- **✨ NUEVO:** Autocompletado de datos en checkout para usuarios registrados
+- **✨ NUEVO:** Panel de administración de usuarios con CRUD completo
+- **✨ NUEVO:** Trazabilidad de pedidos vinculados a usuarios
 
 ## 🏗️ Arquitectura Completa del Sistema
 
@@ -128,6 +157,48 @@ E-comeerse/
     ├── RESUMEN_DESARROLLO.md             # Resumen desarrollo
     └── HELP.md                           # Ayuda Spring Boot
 ```
+
+## ⭐ Características Principales del Sistema
+
+### 🔐 Sistema de Autenticación y Usuarios
+
+- **✅ Registro Público de Usuarios**: Cualquier persona puede registrarse en `/register` sin autenticación previa
+- **✅ Login Inteligente**: Detecta automáticamente el rol y redirige a la página correspondiente (Admin → `/admin`, User → `/`)
+- **✅ Protección de Rutas**: Componente `AdminRoute` que valida permisos antes de permitir acceso al panel admin
+- **✅ Roles y Permisos**: Sistema de roles (USER/ADMIN) con validación en backend y frontend
+- **✅ Seguridad Robusta**: Contraseñas encriptadas con BCrypt, tokens JWT, refresh automático
+
+### 🛒 Sistema de Carrito y Pedidos
+
+- **✅ Carrito Persistente**: Vinculado al usuario, se mantiene entre sesiones
+- **✅ Autocompletado de Datos**: Formulario de facturación se completa automáticamente con datos del usuario registrado
+- **✅ Trazabilidad Completa**: Cada pedido vinculado a `idUsuario` para historial y análisis
+- **✅ Gestión de Estados**: Pedidos con estados (PENDIENTE, ENVIADO, ENTREGADO, CANCELADO)
+- **✅ Panel Admin**: Visualización y gestión completa de pedidos con información del comprador
+
+### 👥 Panel de Administración
+
+- **✅ Gestión de Usuarios**: CRUD completo con búsqueda, filtros y estadísticas
+- **✅ Gestión de Productos**: Crear, editar, eliminar productos con imágenes
+- **✅ Gestión de Categorías**: Organización jerárquica de productos
+- **✅ Gestión de Pedidos**: Ver todos los pedidos, cambiar estados, ver detalles del comprador
+- **✅ Estadísticas en Tiempo Real**: Total de usuarios, productos, pedidos, ventas
+
+### 🎨 Experiencia de Usuario
+
+- **✅ Diseño Moderno**: UI responsive con Tailwind CSS y animaciones GSAP
+- **✅ Navegación Intuitiva**: Menú hamburguesa, búsqueda rápida, filtros por categoría
+- **✅ Carga Optimizada**: Lazy loading de imágenes, caché con TanStack Query
+- **✅ Feedback Visual**: Loaders, mensajes de éxito/error, notificaciones
+- **✅ Accesibilidad**: Diseño responsive móvil/tablet/desktop
+
+### 🔧 Arquitectura Técnica
+
+- **✅ API REST Completa**: Endpoints documentados para todas las operaciones
+- **✅ Validación de Datos**: Backend valida todos los inputs con Spring Validation
+- **✅ Manejo de Errores**: Sistema centralizado de excepciones con mensajes claros
+- **✅ CORS Configurado**: Comunicación segura entre frontend y backend
+- **✅ Base de Datos PostgreSQL**: Hospedada en Neon con esquema completo
 
 ## 🛠️ Stack Tecnológico Completo
 
@@ -367,7 +438,401 @@ CREATE TABLE pedidos (
 - `FALLIDO`: Pago falló
 - `REEMBOLSADO`: Reembolso procesado
 
-## 📊 API REST Endpoints Completos
+## � Sistema de Gestión de Usuarios Completo
+
+### 🎯 Características Principales del Sistema de Usuarios
+
+El sistema implementa una **gestión integral de usuarios** con autenticación, registro, permisos y trazabilidad completa en pedidos.
+
+#### ✅ Funcionalidades Implementadas
+
+1. **🔐 Registro Público de Usuarios**
+   - Formulario de registro accesible en `/register`
+   - Validación de campos (email, contraseña, datos personales)
+   - Encriptación automática de contraseñas con BCrypt
+   - Asignación automática de rol `USER` (sin opción de elegir admin)
+   - Verificación de duplicados (email y nombre de usuario)
+
+2. **🔑 Sistema de Login Inteligente**
+   - Detección automática de rol al iniciar sesión
+   - Redirección inteligente: ADMIN → `/admin`, USER → `/`
+   - Persistencia de sesión con JWT y localStorage
+   - Refresh automático de tokens sin intervención del usuario
+
+3. **🛡️ Protección de Rutas por Rol**
+   - `AdminRoute`: Componente que verifica rol ADMIN
+   - Validación tanto en frontend como en backend
+   - Mensaje de error al intentar acceso no autorizado
+   - Backend valida permisos antes de ejecutar operaciones
+
+4. **📦 Integración con Carrito y Pedidos**
+   - Cada carrito está vinculado al `idUsuario`
+   - Datos del usuario se autocomplementan en checkout
+   - Pedidos guardan `idUsuario` + datos de facturación
+   - Trazabilidad completa: siempre se sabe quién compró
+
+5. **👥 Panel de Gestión de Usuarios (Admin)**
+   - CRUD completo de usuarios desde el panel admin
+   - Visualización de roles, emails, teléfonos
+   - Búsqueda y filtros por rol (ALL, ADMIN, USER)
+   - Estadísticas de usuarios (total, admins, clientes)
+   - Solo administradores pueden crear otros administradores
+
+### 🔐 Roles y Permisos
+
+```java
+public enum Role {
+    USER("USER"),     // Cliente - Puede comprar y ver sus pedidos
+    ADMIN("ADMIN");   // Administrador - Acceso total al panel admin
+}
+```
+
+#### Tabla de Permisos
+
+| Acción | USER | ADMIN |
+|--------|------|-------|
+| Registrarse | ✅ | - |
+| Iniciar sesión | ✅ | ✅ |
+| Ver productos | ✅ | ✅ |
+| Agregar al carrito | ✅ | ✅ |
+| Realizar compras | ✅ | ✅ |
+| Ver sus propios pedidos | ✅ | ✅ |
+| Acceder al panel admin | ❌ | ✅ |
+| Gestionar productos | ❌ | ✅ |
+| Gestionar usuarios | ❌ | ✅ |
+| Ver todos los pedidos | ❌ | ✅ |
+| Cambiar estados de pedidos | ❌ | ✅ |
+| Crear otros administradores | ❌ | ✅ |
+
+### 📋 Modelo de Usuario Completo
+
+```java
+@Entity
+@Table(name = "usuarios")
+public class Usuario {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idUsuario;
+    
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(min = 2, max = 50)
+    private String nombre;
+    
+    @NotBlank(message = "El apellido es obligatorio")
+    @Size(min = 2, max = 50)
+    private String apellido;
+    
+    @NotBlank(message = "El nombre de usuario es obligatorio")
+    @Size(min = 3, max = 50)
+    @Column(unique = true)
+    private String nombreUsuario;
+    
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 6, max = 255)
+    private String contrasena;  // ← Encriptada con BCrypt
+    
+    @NotBlank(message = "El email es obligatorio")
+    @Email(message = "Email debe tener formato válido")
+    @Column(unique = true)
+    private String email;
+    
+    @Size(max = 20)
+    private String telefono;
+    
+    @Enumerated(EnumType.STRING)
+    private Role rol = Role.USER;  // ← Default USER
+    
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion;
+    
+    @Column(name = "fecha_modificacion")
+    private LocalDateTime fechaModificacion;
+}
+```
+
+### 🔄 Flujo Completo de Usuario
+
+```mermaid
+graph TD
+    A[Usuario visita /register] --> B[Completa formulario]
+    B --> C{Datos válidos?}
+    C -->|No| B
+    C -->|Sí| D[Backend: Rol = USER automático]
+    D --> E[Contraseña encriptada]
+    E --> F[Usuario guardado en BD]
+    F --> G[Redirección a /login]
+    G --> H[Usuario inicia sesión]
+    H --> I{Rol del usuario?}
+    I -->|USER| J[Redirección a /]
+    I -->|ADMIN| K[Redirección a /admin]
+    J --> L[Puede comprar productos]
+    K --> M[Acceso a panel admin]
+    L --> N[Datos se autocomplementan en checkout]
+    N --> O[Pedido vinculado a su idUsuario]
+    M --> P[Puede ver todos los pedidos con usuario asociado]
+```
+
+### 🛒 Integración con Sistema de Carrito
+
+#### Autocompletado en Checkout
+
+Cuando un usuario registrado hace checkout, el modal de facturación **automáticamente carga**:
+
+```typescript
+// FacturacionFormModal.tsx
+useEffect(() => {
+  if (isOpen) {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      
+      setFormData(prev => ({
+        ...prev,
+        nombreCompleto: `${user.nombre} ${user.apellido}`,
+        email: user.email,
+        telefono: user.telefono || ''
+      }));
+    }
+  }
+}, [isOpen]);
+```
+
+**Campos autocompletados:**
+- ✅ Nombre completo: `nombre + apellido`
+- ✅ Email: email registrado
+- ✅ Teléfono: teléfono registrado (si existe)
+
+**Campos que debe completar el usuario:**
+- Número de identificación (DNI/Cédula)
+- Dirección completa
+- Ciudad y país
+- Código postal (opcional)
+- Método de pago
+
+#### Vinculación con Pedidos
+
+```java
+// Pedido.java - Modelo completo
+@Entity
+@Table(name = "pedidos")
+public class Pedido {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @NotNull
+    @Column(name = "id_usuario", nullable = false)
+    private Long idUsuario;  // ← Usuario que realizó la compra
+    
+    // Datos de facturación del pedido
+    @Column(name = "cliente_nombre")
+    private String clienteNombre;
+    
+    @Column(name = "cliente_email")
+    private String clienteEmail;
+    
+    @Column(name = "cliente_telefono")
+    private String clienteTelefono;
+    
+    @Column(name = "cliente_direccion")
+    private String clienteDireccion;
+    
+    // ... más campos
+}
+```
+
+**Beneficios:**
+1. **Trazabilidad**: Siempre se sabe qué usuario hizo cada compra
+2. **Experiencia**: Menos campos para llenar en cada compra
+3. **Análisis**: Métricas por usuario (compras, frecuencia, etc.)
+4. **Soporte**: Fácil contactar al cliente si hay problemas
+
+### 🔒 Seguridad del Sistema de Usuarios
+
+#### Backend - SecurityConfig.java
+
+```java
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .authorizeHttpRequests(authz -> authz
+            // Registro público sin autenticación
+            .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+            
+            // Login público
+            .requestMatchers("/api/auth/login", "/api/auth/refresh").permitAll()
+            
+            // Panel admin - SOLO ADMIN
+            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+            
+            // Resto requiere autenticación
+            .anyRequest().authenticated()
+        );
+    return http.build();
+}
+```
+
+#### Backend - UsuarioController.java
+
+```java
+@PostMapping
+public ResponseEntity<?> crearUsuario(
+        @Valid @RequestBody Usuario usuario, 
+        Authentication authentication) {
+    
+    // Si no hay autenticación (registro público), FORZAR rol USER
+    if (authentication == null || !authentication.isAuthenticated()) {
+        usuario.setRol(Role.USER);
+    } 
+    // Si hay autenticación, verificar si es ADMIN
+    else {
+        boolean esAdmin = authentication.getAuthorities()
+            .contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        
+        // Si NO es ADMIN, solo puede crear usuarios con rol USER
+        if (!esAdmin) {
+            usuario.setRol(Role.USER);
+        }
+    }
+    
+    // Encriptar contraseña y guardar
+    Usuario usuarioGuardado = usuarioService.guardarUsuario(usuario);
+    return ResponseEntity.status(HttpStatus.CREATED).body(usuarioGuardado);
+}
+```
+
+#### Frontend - AdminRoute.tsx
+
+```typescript
+export const AdminRoute: React.FC<AdminRouteProps> = ({ children }) => {
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userStr = localStorage.getItem('user');
+    
+    if (!token || !userStr) {
+      setHasAccess('no-auth');
+      return;
+    }
+
+    const user = JSON.parse(userStr);
+    const isAdmin = user.rol === 'ADMIN';
+    
+    if (isAdmin) {
+      setHasAccess('yes');
+    } else {
+      setHasAccess('no-admin');
+    }
+  }, []);
+
+  // Redirecionar según acceso
+  if (hasAccess === 'no-auth') {
+    return <Navigate to="/login" />;
+  }
+  
+  if (hasAccess === 'no-admin') {
+    alert('⛔ No tienes permisos para acceder al panel de administrador.');
+    return <Navigate to="/" />;
+  }
+  
+  return <>{children}</>;
+};
+```
+
+### 📁 Estructura de Archivos del Sistema de Usuarios
+
+#### Backend
+```
+src/main/java/com/example/E_comeerse/
+├── model/
+│   ├── Usuario.java                    ✅ Entidad con roles
+│   └── Role.java                       ✅ Enum de roles
+├── controller/
+│   └── UsuarioController.java          ✅ CRUD con validación de roles
+├── service/
+│   └── UsuarioService.java             ✅ Encriptación de contraseñas
+├── repository/
+│   └── UsuarioRepository.java          ✅ Queries personalizadas
+└── config/
+    └── SecurityConfig.java             ✅ Configuración de permisos
+```
+
+#### Frontend
+```
+src/main/resources/static/front-tiendavirtal/src/
+├── components/
+│   ├── pages/
+│   │   ├── Login.tsx                   ✅ Login con detección de rol
+│   │   └── Register.tsx                ✅ Registro público
+│   ├── admin/pages/
+│   │   └── UserManagement.tsx          ✅ Gestión completa de usuarios
+│   ├── cart/
+│   │   └── FacturacionFormModal.tsx    ✅ Autocompletado de datos
+│   └── AdminRoute.tsx                  ✅ Protección de rutas admin
+├── api/
+│   └── usuariosApi.ts                  ✅ API de usuarios
+└── types/
+    └── usuario.ts                      ✅ Tipos TypeScript
+```
+
+### 🎯 Casos de Uso
+
+#### Caso 1: Registro de Cliente
+1. Usuario accede a `/register`
+2. Completa formulario con sus datos
+3. Acepta términos y condiciones
+4. Click en "Crear Cuenta"
+5. Backend valida, encripta contraseña y asigna `rol: USER`
+6. Redirección automática a `/login`
+7. Usuario inicia sesión normalmente
+
+#### Caso 2: Compra con Datos Autocompletados
+1. Usuario (ya registrado) agrega productos al carrito
+2. Click en "Finalizar Compra"
+3. Modal de facturación se abre con datos pre-cargados:
+   - ✅ Nombre completo
+   - ✅ Email
+   - ✅ Teléfono
+4. Usuario solo completa: dirección, identificación, método de pago
+5. Pedido se crea con `idUsuario` vinculado
+6. Admin puede ver en panel quién realizó la compra
+
+#### Caso 3: Admin Gestiona Usuarios
+1. Admin inicia sesión (rol ADMIN detectado)
+2. Redirección automática a `/admin`
+3. Click en "Gestión de Usuarios"
+4. Ve lista completa de usuarios con filtros
+5. Puede crear nuevos usuarios con cualquier rol
+6. Puede editar o eliminar usuarios existentes
+7. Puede promover usuarios a ADMIN si es necesario
+
+### 🚀 Ventajas del Sistema Implementado
+
+1. **✅ Seguridad Robusta**
+   - Contraseñas encriptadas con BCrypt
+   - Validación de roles en backend y frontend
+   - Prevención de escalada de privilegios
+
+2. **✅ Experiencia de Usuario Mejorada**
+   - Menos campos para llenar en cada compra
+   - Datos consistentes entre pedidos
+   - Proceso de checkout más rápido
+
+3. **✅ Trazabilidad Completa**
+   - Cada pedido vinculado a un usuario
+   - Historial de compras por usuario
+   - Análisis y métricas precisas
+
+4. **✅ Escalabilidad**
+   - Fácil agregar nuevos roles en el futuro
+   - Sistema de permisos extensible
+   - Preparado para features avanzadas
+
+5. **✅ Mantenimiento Simplificado**
+   - Código limpio y bien documentado
+   - Separación clara de responsabilidades
+   - Pruebas unitarias facilitadas
+
+## �📊 API REST Endpoints Completos
 
 ### 🔐 Autenticación (`/api/auth`)
 
@@ -381,13 +846,15 @@ CREATE TABLE pedidos (
 
 ### 👤 Usuarios (`/api/usuarios`)
 
-| Método | Endpoint | Descripción | Body | Respuesta |
-|--------|----------|-------------|------|-----------|
-| `GET` | `/api/usuarios` | Listar todos los usuarios | - | `[{usuario}]` |
-| `POST` | `/api/usuarios` | Crear nuevo usuario | `{nombre, apellido, nombreUsuario, email, contrasena}` | `{usuario}` |
-| `GET` | `/api/usuarios/{id}` | Obtener usuario por ID | - | `{usuario}` |
-| `PUT` | `/api/usuarios/{id}` | Actualizar usuario | `{campos a actualizar}` | `{usuario}` |
-| `DELETE` | `/api/usuarios/{id}` | Eliminar usuario | - | `{message}` |
+| Método | Endpoint | Descripción | Público | Body | Respuesta |
+|--------|----------|-------------|---------|------|-----------|
+| `GET` | `/api/usuarios` | Listar todos los usuarios | ❌ (requiere auth) | - | `[{usuario}]` |
+| `POST` | `/api/usuarios` | **Registrar nuevo usuario** | ✅ **SÍ** (registro público) | `{nombre, apellido, nombreUsuario, email, contrasena, telefono}` | `{usuario}` |
+| `GET` | `/api/usuarios/{id}` | Obtener usuario por ID | ❌ (requiere auth) | - | `{usuario}` |
+| `PUT` | `/api/usuarios/{id}` | Actualizar usuario | ❌ (requiere auth) | `{campos a actualizar}` | `{usuario}` |
+| `DELETE` | `/api/usuarios/{id}` | Eliminar usuario | ❌ (requiere auth) | - | `{message}` |
+
+> **⚠️ IMPORTANTE**: El endpoint `POST /api/usuarios` es **PÚBLICO** (sin autenticación) para permitir el registro de nuevos clientes. El sistema **automáticamente asigna el rol `USER`** a todos los registros públicos, sin importar el rol enviado en el body. Solo administradores autenticados pueden crear usuarios con rol `ADMIN`.
 
 ### 🛍️ Productos (`/api/productos`)
 
@@ -1653,9 +2120,102 @@ Este proyecto está bajo la licencia **MIT**. Ver archivo `LICENSE` para más de
 
 > 🤝 **Para contribuidores**: Leer las "Convenciones de Código" y seguir el "Git Flow" establecido. Toda contribución es bienvenida siguiendo las mejores prácticas documentadas.
 
+---
+
+## 📋 Changelog - Historial de Cambios
+
+### 🎉 v3.0.0 - Sistema Completo de Usuarios y Autenticación (8 de noviembre de 2025)
+
+#### ✨ Nuevas Características
+
+1. **👥 Sistema de Gestión de Usuarios**
+   - ✅ Registro público de usuarios en `/register`
+   - ✅ Panel de administración CRUD completo en `/admin/usuarios`
+   - ✅ Validación de roles (USER/ADMIN)
+   - ✅ Encriptación de contraseñas con BCrypt
+   - ✅ Estadísticas de usuarios en panel admin
+
+2. **🔐 Mejoras de Seguridad**
+   - ✅ Componente `AdminRoute` para protección de rutas admin
+   - ✅ Validación de roles en frontend y backend
+   - ✅ Asignación automática de rol USER en registros públicos
+   - ✅ Solo admins autenticados pueden crear otros admins
+   - ✅ Endpoint público `POST /api/usuarios` para registro
+
+3. **🛒 Integración con Carrito y Pedidos**
+   - ✅ Autocompletado de datos en checkout (nombre, email, teléfono)
+   - ✅ Pedidos vinculados a `idUsuario` para trazabilidad
+   - ✅ Datos del usuario persistidos en localStorage
+   - ✅ Experiencia de usuario mejorada en facturación
+
+4. **📱 Nuevos Componentes Frontend**
+   - ✅ `Register.tsx` - Página de registro público
+   - ✅ `UserManagement.tsx` - Panel admin gestión usuarios
+   - ✅ `AdminRoute.tsx` - Protector de rutas administrativas
+   - ✅ Actualizado `Login.tsx` con enlace a registro
+   - ✅ Actualizado `FacturacionFormModal.tsx` con auto-fill
+
+5. **🔧 Backend - Nuevas Funcionalidades**
+   - ✅ `UsuarioController` con validación de roles
+   - ✅ `UsuarioService` con encriptación automática
+   - ✅ `SecurityConfig` actualizado para registro público
+   - ✅ Modelo `Usuario` completo con fechas de auditoría
+   - ✅ Modelo `Pedido` con campo `idUsuario`
+
+#### 🐛 Correcciones
+
+- ✅ Corregido: Usuarios públicos podían acceder al panel admin
+- ✅ Corregido: Contraseñas no se encriptaban al crear usuario
+- ✅ Corregido: Endpoint de registro requería autenticación
+- ✅ Corregido: Warnings de imports no usados en UserManagement
+- ✅ Corregido: Usuarios registrados no podían elegir rol (siempre USER)
+
+#### 📚 Documentación
+
+- ✅ Nueva sección completa sobre Sistema de Gestión de Usuarios
+- ✅ Documentado flujo de registro y autenticación
+- ✅ Tabla de permisos por rol
+- ✅ Diagramas de flujo de usuario
+- ✅ Ejemplos de código y casos de uso
+- ✅ Actualizada tabla de API endpoints
+
+---
+
+### 🚀 v2.0.0 - Sistema de Carrito y Pedidos (26 de septiembre de 2025)
+
+- ✅ Implementación completa del carrito de compras
+- ✅ Sistema de checkout con formulario de facturación
+- ✅ Gestión de pedidos con estados (PENDIENTE, ENVIADO, ENTREGADO)
+- ✅ Panel de administración con gestión de pedidos
+- ✅ Integración con backend para persistencia de pedidos
+
+---
+
+### 🎨 v1.5.0 - Sistema de Autenticación JWT (Septiembre 2025)
+
+- ✅ Implementación de login con JWT tokens
+- ✅ Refresh tokens automático
+- ✅ Protección de rutas con `ProtectedRoute`
+- ✅ Persistencia de sesión en localStorage
+- ✅ Backend con Spring Security y JWT
+
+---
+
+### 🛍️ v1.0.0 - Sistema Base E-commerce (Agosto 2025)
+
+- ✅ Catálogo de productos con categorías
+- ✅ Sistema de búsqueda y filtros
+- ✅ Diseño responsive con Tailwind CSS
+- ✅ API REST completa (productos, categorías)
+- ✅ Base de datos PostgreSQL en Neon
+- ✅ Backend Spring Boot + Frontend React
+
+---
+
 ### Última Actualización
-**Fecha**: 26 de septiembre de 2025  
-**Versión**: v2.0.0 - Documentación Completa  
+
+**Fecha**: 8 de noviembre de 2025  
+**Versión**: v3.0.0 - Sistema Completo de Usuarios y Autenticación  
 **Autor**: Equipo NebulaTech E-commerce  
 
 ---
