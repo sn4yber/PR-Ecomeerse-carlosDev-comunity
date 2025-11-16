@@ -7,12 +7,15 @@
 
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ConfiguracionProvider } from './context/ConfiguracionContext';
 import { Header, Home, Footer } from './components';
 import { Productos } from './components/pages/Productos';
 import { Carrito } from './components/pages/Carrito';
 import { Login } from './components/pages/Login';
 import { Register } from './components/pages/Register';
+import { UserProfile } from './components/pages/UserProfile';
 import { AdminRoute } from './components/AdminRoute';
+import { UserRoute } from './components/UserRoute';
 import { AdminPanel } from './components/admin/pages/AdminPanel';
 import { ProductManagement } from './components/admin/pages/ProductManagement';
 import { UserManagement } from './components/admin/pages/UserManagement';
@@ -51,21 +54,29 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50 flex flex-col">
-        {/* Layout Header */}
-        <Header 
-          title={APP_CONFIG.title}
-        />
-        
-        {/* Contenido principal con rutas */}
-        <main className="flex-grow">
+    <ConfiguracionProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-50 flex flex-col">
+          {/* Layout Header */}
+          <Header 
+            title={APP_CONFIG.title}
+          />
+          
+          {/* Contenido principal con rutas */}
+          <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/productos" element={<Productos />} />
             <Route path="/carrito" element={<Carrito />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            
+            {/* Ruta del perfil de usuario - Requiere autenticación (USER o ADMIN) */}
+            <Route path="/perfil" element={
+              <UserRoute>
+                <UserProfile />
+              </UserRoute>
+            } />
             
             {/* Rutas protegidas del panel de administración - Solo ADMIN */}
             <Route path="/admin" element={
@@ -108,6 +119,7 @@ function App() {
         <Footer />
       </div>
     </Router>
+    </ConfiguracionProvider>
   );
 }
 

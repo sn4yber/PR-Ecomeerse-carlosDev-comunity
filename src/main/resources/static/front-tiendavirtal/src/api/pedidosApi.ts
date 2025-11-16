@@ -131,3 +131,28 @@ export async function obtenerEstadisticas(): Promise<EstadisticasPedidos> {
 
   return response.json();
 }
+
+/**
+ * Obtener pedidos del usuario autenticado (para perfil de usuario)
+ */
+export async function obtenerMisPedidos(): Promise<PedidoDetalle[]> {
+  const token = await ensureValidToken();
+  
+  if (!token) {
+    throw new Error('Error de autenticación. Por favor, inicia sesión nuevamente.');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/pedidos/mis-pedidos`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al obtener mis pedidos');
+  }
+
+  return response.json();
+}

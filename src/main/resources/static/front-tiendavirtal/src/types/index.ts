@@ -96,3 +96,12 @@ export type {
   FiltrosUsuarios,
   EstadisticasUsuarios,
 } from './usuario';
+
+/**
+ * Re-exportar tipos de reportes
+ */
+export type {
+  EstadisticasGenerales,
+  VentaMensual,
+  ProductoMasVendido,
+} from './reporte';

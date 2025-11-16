@@ -13,3 +13,4 @@ export * from './pages';
 // Route protection
 export { ProtectedRoute } from './ProtectedRoute';
 export { AdminRoute } from './AdminRoute';
+export { UserRoute } from './UserRoute';

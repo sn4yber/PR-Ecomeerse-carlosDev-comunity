@@ -65,6 +65,36 @@ public class PedidoController {
         return ResponseEntity.ok(pedidos);
     }
 
+    /**
+     * Obtener pedidos del usuario autenticado (para perfil de usuario)
+     * GET /api/pedidos/mis-pedidos
+     */
+    @GetMapping("/mis-pedidos")
+    public ResponseEntity<?> obtenerMisPedidos(
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        try {
+            // Extraer el nombre de usuario del token JWT
+            String token = authHeader.replace("Bearer ", "");
+            String nombreUsuario = pedidoService.obtenerNombreUsuarioDeToken(token);
+            
+            // Obtener el ID del usuario por su nombre de usuario
+            Long idUsuario = pedidoService.obtenerIdUsuarioPorNombre(nombreUsuario);
+            
+            if (idUsuario == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Usuario no encontrado");
+            }
+            
+            List<Pedido> pedidos = pedidoService.obtenerPedidosPorUsuario(idUsuario);
+            return ResponseEntity.ok(pedidos);
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener pedidos: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/estado/{estado}")
     public ResponseEntity<List<Pedido>> obtenerPedidosPorEstado(@PathVariable Pedido.EstadoPedido estado) {
         List<Pedido> pedidos = pedidoService.obtenerPedidosPorEstado(estado);

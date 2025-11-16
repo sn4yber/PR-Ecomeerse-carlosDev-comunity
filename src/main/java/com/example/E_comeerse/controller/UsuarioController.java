@@ -88,4 +88,129 @@ public class UsuarioController {
         }
         return ResponseEntity.notFound().build();
     }
+    
+    // ========== ENDPOINTS PARA PERFIL DE USUARIO ==========
+    
+    /**
+     * Obtener perfil del usuario autenticado
+     * GET /api/usuarios/perfil
+     */
+    @GetMapping("/perfil")
+    public ResponseEntity<?> obtenerPerfil(Authentication authentication) {
+        try {
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("No autenticado");
+            }
+            
+            String nombreUsuario = authentication.getName();
+            Optional<Usuario> usuario = usuarioService.obtenerPorNombreUsuario(nombreUsuario);
+            
+            return usuario.map(ResponseEntity::ok)
+                         .orElse(ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener perfil: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Actualizar perfil del usuario autenticado
+     * PUT /api/usuarios/perfil
+     */
+    @PutMapping("/perfil")
+    public ResponseEntity<?> actualizarPerfil(
+            @Valid @RequestBody Usuario usuarioActualizado,
+            Authentication authentication) {
+        try {
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("No autenticado");
+            }
+            
+            String nombreUsuario = authentication.getName();
+            Optional<Usuario> usuarioOpt = usuarioService.obtenerPorNombreUsuario(nombreUsuario);
+            
+            if (usuarioOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            
+            Usuario usuario = usuarioOpt.get();
+            
+            // Actualizar solo campos permitidos (no rol, no contraseña aquí)
+            usuario.setNombre(usuarioActualizado.getNombre());
+            usuario.setApellido(usuarioActualizado.getApellido());
+            usuario.setEmail(usuarioActualizado.getEmail());
+            usuario.setTelefono(usuarioActualizado.getTelefono());
+            // nombreUsuario NO se puede cambiar
+            
+            Usuario guardado = usuarioService.actualizarPerfil(usuario);
+            return ResponseEntity.ok(guardado);
+            
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar perfil: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Cambiar contraseña del usuario autenticado
+     * POST /api/usuarios/cambiar-contrasena
+     */
+    @PostMapping("/cambiar-contrasena")
+    public ResponseEntity<?> cambiarContrasena(
+            @RequestBody CambiarContrasenaRequest request,
+            Authentication authentication) {
+        try {
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("No autenticado");
+            }
+            
+            String nombreUsuario = authentication.getName();
+            
+            boolean resultado = usuarioService.cambiarContrasena(
+                nombreUsuario, 
+                request.getContrasenaActual(), 
+                request.getNuevaContrasena()
+            );
+            
+            if (resultado) {
+                return ResponseEntity.ok("Contraseña actualizada exitosamente");
+            } else {
+                return ResponseEntity.badRequest()
+                        .body("La contraseña actual es incorrecta");
+            }
+            
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al cambiar contraseña: " + e.getMessage());
+        }
+    }
+    
+    // Clase interna para el request de cambio de contraseña
+    public static class CambiarContrasenaRequest {
+        private String contrasenaActual;
+        private String nuevaContrasena;
+        
+        public String getContrasenaActual() {
+            return contrasenaActual;
+        }
+        
+        public void setContrasenaActual(String contrasenaActual) {
+            this.contrasenaActual = contrasenaActual;
+        }
+        
+        public String getNuevaContrasena() {
+            return nuevaContrasena;
+        }
+        
+        public void setNuevaContrasena(String nuevaContrasena) {
+            this.nuevaContrasena = nuevaContrasena;
+        }
+    }
 }

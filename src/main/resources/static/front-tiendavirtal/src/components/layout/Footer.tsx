@@ -6,6 +6,7 @@
  */
 
 import type { FooterSection, ContactInfo } from '../../types';
+import { useConfiguracionGlobal } from '../../context/ConfiguracionContext';
 
 /**
  * Información de contacto de la empresa
@@ -126,8 +127,20 @@ export function Footer({
   showSocial = true,
   showContact = true
 }: FooterProps) {
-  const finalContactInfo = { ...CONTACT_INFO, ...contactInfo };
+  const { configuracion } = useConfiguracionGlobal();
+  
+  // Usar configuración dinámica
+  const finalContactInfo = { 
+    ...CONTACT_INFO, 
+    ...contactInfo,
+    phone: configuracion.general.telefono,
+    email: configuracion.general.emailContacto,
+    address: configuracion.general.direccion,
+    whatsapp: configuracion.general.whatsapp
+  };
+  
   const currentYear = new Date().getFullYear();
+  const redesSocialesActivas = configuracion.redesSociales.filter(r => r.visible);
 
   return (
     <footer className="
@@ -241,31 +254,34 @@ export function Footer({
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             {/* Copyright */}
             <div className="text-gray-700 text-sm">
-              © {currentYear} NebulaTech. Todos los derechos reservados.
+              © {currentYear} {configuracion.general.nombreTienda}. Todos los derechos reservados.
             </div>
 
             {/* Redes sociales */}
-            {showSocial && (
+            {showSocial && redesSocialesActivas.length > 0 && (
               <div className="flex items-center space-x-6">
                 <span className="text-gray-700 text-sm">Síguenos:</span>
                 <div className="flex space-x-4">
-                  {SOCIAL_LINKS.map((social) => (
-                    <a
-                      key={social.name}
-                      href={social.href}
-                      className="
-                        text-gray-600
-                        hover:text-purple-700 
-                        hover:bg-purple-50
-                        p-2 rounded-lg transition-all duration-200
-                      "
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={social.name}
-                    >
-                      {social.icon}
-                    </a>
-                  ))}
+                  {redesSocialesActivas.map((social) => {
+                    const socialLink = SOCIAL_LINKS.find(s => s.name === social.nombre);
+                    return socialLink ? (
+                      <a
+                        key={social.nombre}
+                        href={social.url}
+                        className="
+                          text-gray-600
+                          hover:text-purple-700 
+                          hover:bg-purple-50
+                          p-2 rounded-lg transition-all duration-200
+                        "
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={social.nombre}
+                      >
+                        {socialLink.icon}
+                      </a>
+                    ) : null;
+                  })}
                 </div>
               </div>
             )}

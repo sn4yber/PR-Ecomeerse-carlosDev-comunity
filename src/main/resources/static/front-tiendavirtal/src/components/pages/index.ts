@@ -12,3 +12,7 @@ export type { LoginProps } from './Login';
 
 export { Register } from './Register';
 export type { RegisterProps } from './Register';
+
+export { UserProfile } from './UserProfile';
+export { ReportesPanel } from './ReportesPanel';
+export { ConfiguracionPanel } from './ConfiguracionPanel';

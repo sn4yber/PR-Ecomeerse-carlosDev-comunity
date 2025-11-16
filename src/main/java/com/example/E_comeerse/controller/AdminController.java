@@ -1,11 +1,15 @@
 package com.example.E_comeerse.controller;
 
 import com.example.E_comeerse.dto.AdminUsuarioDto;
+import com.example.E_comeerse.dto.EstadisticasDto;
 import com.example.E_comeerse.model.Usuario;
 import com.example.E_comeerse.model.Producto;
+import com.example.E_comeerse.model.Pedido;
 import com.example.E_comeerse.model.Role;
 import com.example.E_comeerse.service.UsuarioService;
 import com.example.E_comeerse.service.ProductoService;
+import com.example.E_comeerse.service.PedidoService;
+import com.example.E_comeerse.repository.CategoriaRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +28,16 @@ public class AdminController {
 
     private final UsuarioService usuarioService;
     private final ProductoService productoService;
+    private final PedidoService pedidoService;
+    private final CategoriaRepository categoriaRepository;
 
     @Autowired
-    public AdminController(UsuarioService usuarioService, ProductoService productoService) {
+    public AdminController(UsuarioService usuarioService, ProductoService productoService, 
+                          PedidoService pedidoService, CategoriaRepository categoriaRepository) {
         this.usuarioService = usuarioService;
         this.productoService = productoService;
+        this.pedidoService = pedidoService;
+        this.categoriaRepository = categoriaRepository;
     }
 
     @GetMapping("/usuarios")
@@ -54,6 +63,83 @@ public class AdminController {
             return ResponseEntity.ok("Usuario promovido a administrador: " + usuarioPromovido.getNombreUsuario());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error al promover usuario: " + e.getMessage());
+        }
+    }
+
+    // === ESTADÍSTICAS GENERALES ===
+
+    /**
+     * Obtener todas las estadísticas del e-commerce para el dashboard
+     */
+    @GetMapping("/estadisticas")
+    public ResponseEntity<EstadisticasDto> obtenerEstadisticasGenerales() {
+        try {
+            // Estadísticas de productos
+            List<Producto> productos = productoService.listarProductos();
+            long totalProductos = productos.size();
+            long productosSinStock = productos.stream()
+                .filter(p -> p.getCantidadStock() == 0)
+                .count();
+            long productosActivos = productos.stream()
+                .filter(p -> p.getCantidadStock() > 0)
+                .count();
+
+            // Estadísticas de usuarios
+            List<Usuario> usuarios = usuarioService.listarTodosLosUsuarios();
+            long totalUsuarios = usuarios.size();
+            long usuariosAdministradores = usuarios.stream()
+                .filter(u -> u.getRol() == Role.ADMIN)
+                .count();
+
+            // Estadísticas de ventas
+            List<Pedido> pedidos = pedidoService.obtenerTodosLosPedidos();
+            long totalPedidos = pedidos.size();
+            long pedidosPendientes = pedidos.stream()
+                .filter(p -> p.getEstadoPedido() == Pedido.EstadoPedido.PENDIENTE)
+                .count();
+            
+            double ventasTotales = pedidos.stream()
+                .mapToDouble(p -> p.getMontoTotal() != null ? p.getMontoTotal().doubleValue() : 0.0)
+                .sum();
+
+            // Categoría más popular (por cantidad de productos)
+            String categoriaMasPopular = "Sin categorías";
+            long productosEnCategoriaMasPopular = 0L;
+            
+            try {
+                java.util.Optional<java.util.Map.Entry<String, Long>> categoriaOpt = productos.stream()
+                    .filter(p -> p.getCategoria() != null)
+                    .collect(java.util.stream.Collectors.groupingBy(
+                        p -> p.getCategoria(),
+                        java.util.stream.Collectors.counting()
+                    ))
+                    .entrySet().stream()
+                    .max(java.util.Map.Entry.comparingByValue());
+                
+                if (categoriaOpt.isPresent()) {
+                    categoriaMasPopular = categoriaOpt.get().getKey();
+                    productosEnCategoriaMasPopular = categoriaOpt.get().getValue();
+                }
+            } catch (Exception e) {
+                // Si hay error calculando la categoría, se mantienen los valores por defecto
+            }
+
+            EstadisticasDto estadisticas = new EstadisticasDto(
+                totalProductos,
+                productosSinStock,
+                productosActivos,
+                totalUsuarios,
+                usuariosAdministradores,
+                ventasTotales,
+                totalPedidos,
+                pedidosPendientes,
+                categoriaMasPopular,
+                productosEnCategoriaMasPopular
+            );
+
+            return ResponseEntity.ok(estadisticas);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { productosAPI } from '../../lib/api';
 import { resolveImageUrl } from '../../lib/utils';
+import { useConfiguracionGlobal } from '../../context/ConfiguracionContext';
 
 /**
  * Props del componente Home
@@ -65,6 +66,7 @@ const AnimatedCounter: React.FC<{ end: number; duration?: number; suffix?: strin
  */
 export const Home: React.FC<HomeProps> = ({ className = "" }) => {
   const [isVisible, setIsVisible] = useState(false);
+  const { configuracion } = useConfiguracionGlobal();
   
   useEffect(() => {
     setIsVisible(true);
@@ -110,24 +112,22 @@ export const Home: React.FC<HomeProps> = ({ className = "" }) => {
               <div className="space-y-6">
                 <div className="inline-block animate-bounce-slow">
                   <span className="bg-gradient-to-r from-gray-700 to-purple-700 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
-                    ✨ Tecnología de Vanguardia
+                    {configuracion.hero.badge}
                   </span>
                 </div>
                 
                 <h1 className="text-5xl lg:text-7xl font-bold text-white leading-tight">
                   <span className="inline-block hover:scale-105 transition-transform duration-300">
-                    Bienvenidos a
+                    {configuracion.hero.titulo}
                   </span>
                   <br />
                   <span className="bg-gradient-to-r from-gray-400 via-purple-400 to-gray-400 bg-clip-text text-transparent inline-block animate-gradient bg-[length:200%_100%]">
-                    NebulaTech
+                    {configuracion.hero.subtitulo}
                   </span>
                 </h1>
                 
                 <p className="text-xl lg:text-2xl text-gray-300 max-w-lg leading-relaxed">
-                  Encuentra lo que necesitas para{' '}
-                  <span className="text-purple-400 font-bold">romper todos los límites</span> 
-                  {' '}y llevar tu experiencia gaming al siguiente nivel.
+                  {configuracion.hero.descripcion}
                 </p>
               </div>
               
@@ -136,7 +136,7 @@ export const Home: React.FC<HomeProps> = ({ className = "" }) => {
                   to="/productos"
                   className="group bg-gradient-to-r from-gray-800 to-purple-700 hover:from-gray-900 hover:to-purple-800 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl inline-flex items-center space-x-2 no-underline"
                 >
-                  <span>Ver Productos</span>
+                  <span>{configuracion.hero.textoCta}</span>
                   <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
@@ -181,8 +181,8 @@ export const Home: React.FC<HomeProps> = ({ className = "" }) => {
               <div className="relative rounded-2xl overflow-hidden shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 transform hover:scale-105">
                 <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/20 to-pink-600/20 z-10"></div>
                 <img 
-                  src="/random-image.png" 
-                  alt="Gaming & PC Components - NebulaTech" 
+                  src={configuracion.hero.imagenHero} 
+                  alt={`${configuracion.general.nombreTienda} - ${configuracion.general.descripcion}`} 
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -219,24 +219,19 @@ export const Home: React.FC<HomeProps> = ({ className = "" }) => {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { name: 'Gaming PCs', icon: '🖥️', color: 'from-gray-700 to-purple-700', value: 'gaming-pcs' },
-              { name: 'Periféricos', icon: '⌨️', color: 'from-purple-700 to-gray-800', value: 'perifericos' },
-              { name: 'Componentes', icon: '🔧', color: 'from-gray-800 to-purple-800', value: 'componentes' },
-              { name: 'Accesorios', icon: '🎧', color: 'from-purple-600 to-gray-700', value: 'accesorios' }
-            ].map((category, index) => (
+            {configuracion.categorias.map((category, index) => (
               <Link
                 key={index}
-                to={`/productos?categoria=${category.value}`}
+                to={`/productos?categoria=${category.valor}`}
                 className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden no-underline"
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                <div className={`absolute inset-0 bg-gradient-to-br ${category.colorGradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 <div className="relative z-10">
                   <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                    {category.icon}
+                    {category.icono}
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 group-hover:text-purple-600 transition-colors">
-                    {category.name}
+                    {category.nombre}
                   </h3>
                 </div>
               </Link>
@@ -250,62 +245,25 @@ export const Home: React.FC<HomeProps> = ({ className = "" }) => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-              ¿Por qué <span className="bg-gradient-to-r from-gray-800 to-purple-700 bg-clip-text text-transparent">NebulaTech</span>?
+              ¿Por qué <span className="bg-gradient-to-r from-gray-800 to-purple-700 bg-clip-text text-transparent">{configuracion.general.nombreTienda}</span>?
             </h2>
-            <p className="text-lg text-gray-600">La mejor experiencia de compra garantizada</p>
+            <p className="text-lg text-gray-600">{configuracion.general.slogan}</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                icon: (
-                  <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                ),
-                title: 'Calidad Premium',
-                description: 'Solo productos de las mejores marcas del mercado'
-              },
-              {
-                icon: (
-                  <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                ),
-                title: 'Envío Express',
-                description: 'Entrega en 24-48 horas a todo el país'
-              },
-              {
-                icon: (
-                  <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                ),
-                title: 'Garantía Extendida',
-                description: 'Hasta 3 años de garantía en todos los productos'
-              },
-              {
-                icon: (
-                  <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                ),
-                title: 'Soporte 24/7',
-                description: 'Atención al cliente siempre disponible'
-              }
-            ].map((feature, index) => (
+            {configuracion.caracteristicas.map((feature, index) => (
               <div 
                 key={index}
                 className="group text-center p-8 rounded-2xl hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 transition-all duration-300"
               >
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-gray-800 to-purple-700 text-white mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
-                  {feature.icon}
+                  <span className="text-4xl">{feature.icono}</span>
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-purple-700 transition-colors">
-                  {feature.title}
+                  {feature.titulo}
                 </h3>
                 <p className="text-gray-600">
-                  {feature.description}
+                  {feature.descripcion}
                 </p>
               </div>
             ))}
@@ -327,38 +285,26 @@ export const Home: React.FC<HomeProps> = ({ className = "" }) => {
               <div className="space-y-8">
                 <div>
                   <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-                    Sobre <span className="bg-gradient-to-r from-gray-400 to-purple-400 bg-clip-text text-transparent">NebulaTech</span>
+                    <span className="bg-gradient-to-r from-gray-400 to-purple-400 bg-clip-text text-transparent">{configuracion.about.titulo}</span>
                   </h2>
                   <p className="text-lg text-gray-300 leading-relaxed mb-6">
-                    Somos una comunidad de gamers apasionados que ofrece productos gaming de alta calidad. 
-                    Nuestro equipo prueba cada producto para garantizar la mejor experiencia de juego.
+                    {configuracion.about.descripcionPrincipal}
                   </p>
                   <p className="text-gray-400 leading-relaxed">
-                    Con más de 5 años de experiencia, nos hemos convertido en el destino favorito 
-                    de miles de gamers que buscan calidad, precio y atención personalizada.
+                    {configuracion.about.descripcionSecundaria}
                   </p>
                 </div>
 
                 {/* Estadísticas Animadas */}
                 <div className="grid grid-cols-3 gap-6">
-                  <div className="text-center p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300">
-                    <h3 className="text-4xl font-bold text-purple-400 mb-2">
-                      <AnimatedCounter end={10} suffix="k+" />
-                    </h3>
-                    <p className="text-sm text-gray-400">Productos</p>
-                  </div>
-                  <div className="text-center p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300">
-                    <h3 className="text-4xl font-bold text-pink-400 mb-2">
-                      <AnimatedCounter end={98} suffix="%" />
-                    </h3>
-                    <p className="text-sm text-gray-400">Satisfacción</p>
-                  </div>
-                  <div className="text-center p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300">
-                    <h3 className="text-4xl font-bold text-blue-400 mb-2">
-                      <AnimatedCounter end={5} suffix="+" />
-                    </h3>
-                    <p className="text-sm text-gray-400">Años</p>
-                  </div>
+                  {configuracion.estadisticas.map((stat, index) => (
+                    <div key={index} className="text-center p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300">
+                      <h3 className={`text-4xl font-bold text-${stat.color}-400 mb-2`}>
+                        {stat.valor}
+                      </h3>
+                      <p className="text-sm text-gray-400">{stat.label}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
               
@@ -366,13 +312,13 @@ export const Home: React.FC<HomeProps> = ({ className = "" }) => {
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105">
                   <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/20 to-pink-600/20 z-10"></div>
                   <img 
-                    src="/universo.png" 
-                    alt="Gaming Setup - NebulaTech" 
+                    src={configuracion.about.imagenAbout} 
+                    alt={`${configuracion.general.nombreTienda} - ${configuracion.about.titulo}`} 
                     className="w-full h-auto object-cover"
                   />
                 </div>
                 <div className="absolute -bottom-6 -right-6 bg-gradient-to-r from-gray-800 to-purple-700 text-white p-6 rounded-2xl shadow-2xl animate-bounce-slow">
-                  <p className="font-bold text-lg">🎮 Tu gaming, nuestra pasión</p>
+                  <p className="font-bold text-lg">{configuracion.about.badgeTexto}</p>
                 </div>
               </div>
             </div>
@@ -570,12 +516,10 @@ export const Home: React.FC<HomeProps> = ({ className = "" }) => {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center text-white">
             <h2 className="text-4xl lg:text-6xl font-bold mb-6">
-              ¿Listo para llevar tu{' '}
-              <span className="underline decoration-wavy decoration-purple-300">gaming</span>
-              {' '}al siguiente nivel?
+              {configuracion.general.descripcion}
             </h2>
             <p className="text-xl lg:text-2xl mb-10 text-gray-300">
-              Únete a miles de gamers que ya confían en NebulaTech
+              Únete a miles de clientes que ya confían en {configuracion.general.nombreTienda}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

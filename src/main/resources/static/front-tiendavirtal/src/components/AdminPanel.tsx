@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { AdminDashboard } from './admin';
+import { AdminDashboard } from './admin/pages/AdminDashboard';
 
 export interface AdminPanelProps {
   className?: string;

@@ -103,4 +103,66 @@ public class UsuarioService {
         usuario.setRol(Role.ADMIN);
         return usuarioRepository.save(usuario);
     }
+    
+    // ========== MÉTODOS PARA PERFIL DE USUARIO ==========
+    
+    /**
+     * Obtener usuario por nombre de usuario
+     */
+    public Optional<Usuario> obtenerPorNombreUsuario(String nombreUsuario) {
+        return usuarioRepository.findByNombreUsuario(nombreUsuario);
+    }
+    
+    /**
+     * Actualizar perfil del usuario (sin cambiar contraseña ni rol)
+     */
+    public Usuario actualizarPerfil(Usuario usuario) {
+        // Verificar que el usuario existe
+        Usuario usuarioExistente = usuarioRepository.findById(usuario.getIdUsuario())
+            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+        
+        // Verificar que el email no esté en uso por otro usuario
+        Optional<Usuario> usuarioConEmail = usuarioRepository.findByEmail(usuario.getEmail());
+        if (usuarioConEmail.isPresent() && 
+            !usuarioConEmail.get().getIdUsuario().equals(usuario.getIdUsuario())) {
+            throw new IllegalArgumentException("El email ya está en uso por otro usuario");
+        }
+        
+        // Mantener campos que no deben cambiar
+        usuario.setContrasena(usuarioExistente.getContrasena());
+        usuario.setRol(usuarioExistente.getRol());
+        usuario.setNombreUsuario(usuarioExistente.getNombreUsuario());
+        usuario.setFechaCreacion(usuarioExistente.getFechaCreacion());
+        
+        return usuarioRepository.save(usuario);
+    }
+    
+    /**
+     * Cambiar contraseña del usuario
+     */
+    public boolean cambiarContrasena(String nombreUsuario, String contrasenaActual, String nuevaContrasena) {
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByNombreUsuario(nombreUsuario);
+        
+        if (usuarioOpt.isEmpty()) {
+            throw new IllegalArgumentException("Usuario no encontrado");
+        }
+        
+        Usuario usuario = usuarioOpt.get();
+        
+        // Verificar que la contraseña actual sea correcta
+        if (!passwordEncoder.matches(contrasenaActual, usuario.getContrasena())) {
+            return false;
+        }
+        
+        // Validar nueva contraseña
+        if (nuevaContrasena == null || nuevaContrasena.length() < 6) {
+            throw new IllegalArgumentException("La nueva contraseña debe tener al menos 6 caracteres");
+        }
+        
+        // Encriptar y guardar nueva contraseña
+        usuario.setContrasena(passwordEncoder.encode(nuevaContrasena));
+        usuarioRepository.save(usuario);
+        
+        return true;
+    }
 }

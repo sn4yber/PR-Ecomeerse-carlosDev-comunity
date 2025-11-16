@@ -3,7 +3,10 @@ package com.example.E_comeerse.service;
 import com.example.E_comeerse.dto.ActualizarEstadoPedidoDto;
 import com.example.E_comeerse.dto.PedidoDetalleDto;
 import com.example.E_comeerse.model.Pedido;
+import com.example.E_comeerse.model.Usuario;
 import com.example.E_comeerse.repository.PedidoRepository;
+import com.example.E_comeerse.repository.UsuarioRepository;
+import com.example.E_comeerse.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +24,12 @@ public class PedidoService {
 
     @Autowired
     private PedidoRepository pedidoRepository;
+    
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     public List<Pedido> obtenerTodosLosPedidos() {
         return pedidoRepository.findAll();
@@ -142,5 +151,20 @@ public class PedidoService {
         stats.put("ventasMesActual", ventasMes != null ? ventasMes : BigDecimal.ZERO);
 
         return stats;
+    }
+    
+    /**
+     * Extraer nombre de usuario del token JWT
+     */
+    public String obtenerNombreUsuarioDeToken(String token) {
+        return jwtTokenUtil.getUsernameFromToken(token);
+    }
+    
+    /**
+     * Obtener ID del usuario por nombre de usuario
+     */
+    public Long obtenerIdUsuarioPorNombre(String nombreUsuario) {
+        Usuario usuario = usuarioRepository.findByNombreUsuario(nombreUsuario).orElse(null);
+        return usuario != null ? usuario.getIdUsuario() : null;
     }
 }

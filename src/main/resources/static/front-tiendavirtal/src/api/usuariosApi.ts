@@ -8,7 +8,9 @@ import type {
   Usuario,
   CrearUsuarioRequest,
   ActualizarUsuarioRequest,
-  FiltrosUsuarios
+  FiltrosUsuarios,
+  ActualizarPerfilRequest,
+  CambiarContrasenaRequest
 } from '../types/usuario';
 
 const API_BASE_URL = 'http://localhost:8080/api';
@@ -190,4 +192,85 @@ export async function registrarUsuario(datos: CrearUsuarioRequest): Promise<Usua
   }
 
   return response.json();
+}
+
+// ========== API DE PERFIL DE USUARIO ==========
+
+/**
+ * Obtener perfil del usuario autenticado
+ */
+export async function obtenerMiPerfil(): Promise<Usuario> {
+  const token = await ensureValidToken();
+  
+  if (!token) {
+    throw new Error('Error de autenticación. Por favor, inicia sesión nuevamente.');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/usuarios/perfil`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al obtener perfil');
+  }
+
+  return response.json();
+}
+
+/**
+ * Actualizar perfil del usuario autenticado
+ */
+export async function actualizarMiPerfil(datos: ActualizarPerfilRequest): Promise<Usuario> {
+  const token = await ensureValidToken();
+  
+  if (!token) {
+    throw new Error('Error de autenticación. Por favor, inicia sesión nuevamente.');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/usuarios/perfil`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(datos),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al actualizar perfil');
+  }
+
+  return response.json();
+}
+
+/**
+ * Cambiar contraseña del usuario autenticado
+ */
+export async function cambiarContrasena(datos: CambiarContrasenaRequest): Promise<void> {
+  const token = await ensureValidToken();
+  
+  if (!token) {
+    throw new Error('Error de autenticación. Por favor, inicia sesión nuevamente.');
+  }
+
+  const response = await fetch(`${API_BASE_URL}/usuarios/cambiar-contrasena`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify(datos),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || 'Error al cambiar contraseña');
+  }
 }

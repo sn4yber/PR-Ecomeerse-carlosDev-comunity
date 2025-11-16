@@ -61,3 +61,21 @@ export interface EstadisticasUsuarios {
   totalClientes: number;
   nuevosEsteMes: number;
 }
+
+/**
+ * DTO para actualizar perfil (sin contraseña ni rol)
+ */
+export interface ActualizarPerfilRequest {
+  nombre: string;
+  apellido: string;
+  email: string;
+  telefono?: string;
+}
+
+/**
+ * DTO para cambiar contraseña
+ */
+export interface CambiarContrasenaRequest {
+  contrasenaActual: string;
+  nuevaContrasena: string;
+}

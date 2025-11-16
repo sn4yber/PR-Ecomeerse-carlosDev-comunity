@@ -79,26 +79,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ className = "" }) => {
 
       {/* Contenido principal */}
       <main className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        {/* Banner de construcción */}
-        <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-6 mb-8">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <svg className="h-8 w-8 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.664-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z" />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <h3 className="text-lg font-medium text-yellow-800">
-                🚧 Panel en Construcción
-              </h3>
-              <p className="text-sm text-yellow-700 mt-1">
-                El panel de administración está siendo desarrollado. Pronto tendrás acceso a todas las funcionalidades administrativas.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Grid de funcionalidades futuras */}
+        {/* Grid de funcionalidades */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Card: Gestión de Productos */}
           <Link to="/admin/productos" className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200 block no-underline">
