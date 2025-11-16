@@ -1,346 +1,689 @@
-# 🛒 E-Commerce - NebulaTech TiendaVirtual
+# 🛒 E-Commerce Universal Template System# 🛒 E-Commerce - NebulaTech TiendaVirtual
 
-[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com)
+
+
+> **Una plataforma de comercio electrónico completamente personalizable y lista para producción**[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com)
+
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.5-green.svg)](https://spring.io/projects/spring-boot)
-[![React](https://img.shields.io/badge/React-19.1.1-61DAFB.svg)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue.svg)](https://www.typescriptlang.org/)
-[![License](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-## 🎉 ¡Novedades v3.0.0!
+[![React](https://img.shields.io/badge/React-19.1.1-blue.svg)](https://reactjs.org/)[![React](https://img.shields.io/badge/React-19.1.1-61DAFB.svg)](https://reactjs.org/)
 
-> **✨ Sistema Completo de Gestión de Usuarios y Autenticación Implementado**
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green.svg)](https://spring.io/projects/spring-boot)[![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue.svg)](https://www.typescriptlang.org/)
 
-Esta versión introduce un **sistema integral de usuarios** con registro público, autenticación por roles, autocompletado de datos en checkout y trazabilidad completa de pedidos. ¡La experiencia de usuario ha sido mejorada significativamente!
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8.3-blue.svg)](https://www.typescriptlang.org/)[![License](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
-**Nuevas funcionalidades destacadas:**
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-4.1.13-38B2AC.svg)](https://tailwindcss.com/)
+
+[![License](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)## 🎉 ¡Novedades v3.0.0!
+
+
+
+---> **✨ Sistema Completo de Gestión de Usuarios y Autenticación Implementado**
+
+
+
+## 🎯 ¿Qué es este proyecto?Esta versión introduce un **sistema integral de usuarios** con registro público, autenticación por roles, autocompletado de datos en checkout y trazabilidad completa de pedidos. ¡La experiencia de usuario ha sido mejorada significativamente!
+
+
+
+Un **sistema e-commerce universal** que se adapta a cualquier tipo de negocio. Desde tiendas de tecnología hasta boutiques de ropa, configura toda tu tienda desde un panel de administración intuitivo **sin escribir código**.**Nuevas funcionalidades destacadas:**
+
 - 👥 **Registro de usuarios** sin autenticación previa en `/register`
-- 🔐 **Login inteligente** con detección automática de rol (ADMIN/USER)
+
+### ✨ Por qué es Especial- 🔐 **Login inteligente** con detección automática de rol (ADMIN/USER)
+
 - 🛡️ **Protección de rutas** administrativas con `AdminRoute`
-- 🛒 **Autocompletado** de datos personales en el checkout
-- 📊 **Panel de administración** de usuarios con CRUD completo
-- 🔒 **Encriptación BCrypt** de contraseñas
-- 📦 **Trazabilidad** de pedidos vinculados a usuarios
+
+- 🎨 **100% Personalizable** - Panel de configuración con 7 tabs completos- 🛒 **Autocompletado** de datos personales en el checkout
+
+- 🏪 **Multi-Industria** - Gaming, Ropa, Tecnología, Hogar, Deportes- 📊 **Panel de administración** de usuarios con CRUD completo
+
+- 🔐 **Seguro** - Autenticación JWT, roles, encriptación BCrypt- 🔒 **Encriptación BCrypt** de contraseñas
+
+- 📱 **Responsive** - Funciona perfecto en móvil, tablet y desktop- 📦 **Trazabilidad** de pedidos vinculados a usuarios
+
+- 🚀 **Production Ready** - Listo para desplegar en producción
 
 [Ver Changelog completo](#-changelog---historial-de-cambios) | [Ver Sistema de Usuarios](#-sistema-de-gestión-de-usuarios-completo)
 
 ---
 
+---
+
+## 📚 Documentación Completa
+
 ## 📋 Descripción Completa
 
-**NebulaTech E-Commerce** es un proyecto colaborativo de tienda virtual desarrollado con arquitectura full-stack moderna. Combina **Spring Boot** para el backend API REST con **React + TypeScript** para el frontend, creando una aplicación escalable para gestión completa de productos gaming, usuarios y pedidos en línea.
+| Documento | Descripción |
 
-### 🎯 Objetivos del Proyecto
-- Crear una plataforma e-commerce completa y funcional
+|-----------|-------------|**NebulaTech E-Commerce** es un proyecto colaborativo de tienda virtual desarrollado con arquitectura full-stack moderna. Combina **Spring Boot** para el backend API REST con **React + TypeScript** para el frontend, creando una aplicación escalable para gestión completa de productos gaming, usuarios y pedidos en línea.
+
+| **[📖 README_PROYECTO.md](README_PROYECTO.md)** | Documentación técnica completa y detallada |
+
+| **[👤 GUIA_USUARIO.md](GUIA_USUARIO.md)** | Manual de usuario para admins y clientes |### 🎯 Objetivos del Proyecto
+
+| **[💾 database/carrito_schema.sql](database/carrito_schema.sql)** | Schema de base de datos |- Crear una plataforma e-commerce completa y funcional
+
 - Implementar mejores prácticas de desarrollo full-stack
-- Proporcionar experiencia de usuario moderna y responsiva
+
+---- Proporcionar experiencia de usuario moderna y responsiva
+
 - Gestión completa de inventario, usuarios y pedidos
-- Sistema de autenticación JWT robusto con refresh automático
+
+## 🚀 Inicio Rápido- Sistema de autenticación JWT robusto con refresh automático
+
 - Manejo inteligente de sesiones y persistencia de login
-- Sistema de subida y gestión de imágenes de productos
+
+### Prerrequisitos- Sistema de subida y gestión de imágenes de productos
+
 - **✨ NUEVO:** Sistema completo de registro de usuarios con roles
-- **✨ NUEVO:** Autocompletado de datos en checkout para usuarios registrados
-- **✨ NUEVO:** Panel de administración de usuarios con CRUD completo
-- **✨ NUEVO:** Trazabilidad de pedidos vinculados a usuarios
+
+- Java 17+ ☕- **✨ NUEVO:** Autocompletado de datos en checkout para usuarios registrados
+
+- Node.js 18+ 📦- **✨ NUEVO:** Panel de administración de usuarios con CRUD completo
+
+- MySQL 8.0+ 🗄️- **✨ NUEVO:** Trazabilidad de pedidos vinculados a usuarios
+
+- Maven 3.8+ 🔧
 
 ## 🏗️ Arquitectura Completa del Sistema
 
+### Instalación
+
 ```
-E-comeerse/
-├── 📁 Backend (Spring Boot + Java 24)
-│   ├── src/main/java/com/example/E_comeerse/
-│   │   ├── 🎮 EComeerseApplication.java    # Clase principal
+
+```bashE-comeerse/
+
+# 1. Clonar el repositorio├── 📁 Backend (Spring Boot + Java 24)
+
+git clone https://github.com/sn4yber/PR-Ecomeerse-carlosDev-comunity.git│   ├── src/main/java/com/example/E_comeerse/
+
+cd PR-Ecomeerse-carlosDev-comunity│   │   ├── 🎮 EComeerseApplication.java    # Clase principal
+
 │   │   ├── 🎛️ config/                      # Configuraciones
-│   │   │   ├── SecurityConfig.java         # Seguridad Spring
-│   │   │   ├── JwtConfig.java             # Configuración JWT
+
+# 2. Configurar base de datos│   │   │   ├── SecurityConfig.java         # Seguridad Spring
+
+mysql -u root -p < database/carrito_schema.sql│   │   │   ├── JwtConfig.java             # Configuración JWT
+
 │   │   │   ├── WebConfig.java             # Configuración Web/CORS
-│   │   │   └── DataInitializer.java       # Datos iniciales
-│   │   ├── 🎯 controller/                  # Controladores REST API
-│   │   │   ├── AuthController.java         # Autenticación
+
+# 3. Configurar application.properties│   │   │   └── DataInitializer.java       # Datos iniciales
+
+# Editar: src/main/resources/application.properties│   │   ├── 🎯 controller/                  # Controladores REST API
+
+# Actualizar credenciales de base de datos│   │   │   ├── AuthController.java         # Autenticación
+
 │   │   │   ├── UsuarioController.java      # Gestión usuarios
-│   │   │   ├── ProductoController.java     # Gestión productos
-│   │   │   ├── CategoriaController.java    # Gestión categorías
+
+# 4. Iniciar Backend│   │   │   ├── ProductoController.java     # Gestión productos
+
+./mvnw spring-boot:run│   │   │   ├── CategoriaController.java    # Gestión categorías
+
 │   │   │   └── PedidoController.java       # Gestión pedidos
-│   │   ├── 🗂️ dto/                        # Data Transfer Objects
-│   │   │   ├── AuthResponse.java          # Respuesta autenticación
-│   │   │   ├── LoginRequest.java          # Petición login
-│   │   │   └── RefreshTokenRequest.java   # Petición refresh token
-│   │   ├── ⚠️ exception/                   # Manejo de excepciones
+
+# 5. Iniciar Frontend (en otra terminal)│   │   ├── 🗂️ dto/                        # Data Transfer Objects
+
+cd src/main/resources/static/front-tiendavirtal│   │   │   ├── AuthResponse.java          # Respuesta autenticación
+
+npm install│   │   │   ├── LoginRequest.java          # Petición login
+
+npm run dev│   │   │   └── RefreshTokenRequest.java   # Petición refresh token
+
+```│   │   ├── ⚠️ exception/                   # Manejo de excepciones
+
 │   │   │   └── AuthExceptionHandler.java  # Excepciones auth
-│   │   ├── 🏗️ model/                      # Entidades JPA
-│   │   │   ├── Usuario.java               # Entidad Usuario
+
+**Backend:** `http://localhost:8080`  │   │   ├── 🏗️ model/                      # Entidades JPA
+
+**Frontend:** `http://localhost:5173`│   │   │   ├── Usuario.java               # Entidad Usuario
+
 │   │   │   ├── Producto.java              # Entidad Producto
-│   │   │   ├── Categoria.java             # Entidad Categoría
+
+---│   │   │   ├── Categoria.java             # Entidad Categoría
+
 │   │   │   └── Pedido.java                # Entidad Pedido
-│   │   ├── 🗃️ repository/                 # Repositorios JPA
+
+## 🎨 Sistema de Configuración Universal│   │   ├── 🗃️ repository/                 # Repositorios JPA
+
 │   │   │   ├── UsuarioRepository.java     # Repo usuarios
-│   │   │   ├── ProductoRepository.java    # Repo productos
+
+El corazón del proyecto es el **Panel de Configuración** con 7 secciones editables:│   │   │   ├── ProductoRepository.java    # Repo productos
+
 │   │   │   ├── CategoriaRepository.java   # Repo categorías
-│   │   │   └── PedidoRepository.java      # Repo pedidos
-│   │   ├── 🔒 security/                    # Sistema seguridad JWT
+
+### 1️⃣ General│   │   │   └── PedidoRepository.java      # Repo pedidos
+
+Nombre de tienda, slogan, contacto, logo, tipo de negocio│   │   ├── 🔒 security/                    # Sistema seguridad JWT
+
 │   │   │   ├── JwtTokenUtil.java          # Utilidades JWT
-│   │   │   ├── JwtAuthenticationFilter.java # Filtro JWT
-│   │   │   ├── JwtAuthenticationEntryPoint.java
+
+### 2️⃣ Tienda│   │   │   ├── JwtAuthenticationFilter.java # Filtro JWT
+
+Moneda, IVA, costos de envío, umbrales de envío gratis│   │   │   ├── JwtAuthenticationEntryPoint.java
+
 │   │   │   ├── JwtValidationInterceptor.java
-│   │   │   ├── CustomUserDetailsService.java
-│   │   │   └── UserPrincipal.java         # Principal usuario
+
+### 3️⃣ Hero Section│   │   │   ├── CustomUserDetailsService.java
+
+Banner principal, títulos, subtítulos, imágenes, CTAs│   │   │   └── UserPrincipal.java         # Principal usuario
+
 │   │   └── 🎪 service/                     # Lógica de negocio
-│   │       ├── UsuarioService.java        # Servicios usuario
-│   │       ├── ProductoService.java       # Servicios producto
+
+### 4️⃣ Características│   │       ├── UsuarioService.java        # Servicios usuario
+
+Beneficios del negocio (envío gratis, garantías, etc.)│   │       ├── ProductoService.java       # Servicios producto
+
 │   │       ├── CategoriaService.java      # Servicios categoría
-│   │       └── PedidoService.java         # Servicios pedido
-│   ├── src/main/resources/
+
+### 5️⃣ Redes Sociales│   │       └── PedidoService.java         # Servicios pedido
+
+Links y visibilidad de Facebook, Instagram, Twitter, WhatsApp, LinkedIn│   ├── src/main/resources/
+
 │   │   ├── application.properties         # Configuración app
-│   │   ├── static/                        # Recursos estáticos
-│   │   │   └── front-tiendavirtal/        # Frontend integrado
+
+### 6️⃣ Categorías│   │   ├── static/                        # Recursos estáticos
+
+Productos organizados con emojis y gradientes personalizados│   │   │   └── front-tiendavirtal/        # Frontend integrado
+
 │   │   └── templates/                     # Plantillas (si aplica)
-│   └── src/test/java/                     # Tests unitarios
-├── 📁 Frontend (React + TypeScript)
+
+### 7️⃣ Avanzada│   └── src/test/java/                     # Tests unitarios
+
+Modo mantenimiento, políticas de stock, configuraciones técnicas├── 📁 Frontend (React + TypeScript)
+
 │   └── src/main/resources/static/front-tiendavirtal/
-│       ├── 📋 package.json                # Dependencias NPM
+
+**Todo se guarda automáticamente y se ve reflejado al instante** ✨│       ├── 📋 package.json                # Dependencias NPM
+
 │       ├── 🏠 index.html                  # Página principal HTML
-│       ├── ⚙️ vite.config.ts              # Configuración Vite
+
+---│       ├── ⚙️ vite.config.ts              # Configuración Vite
+
 │       ├── 🎨 tailwind.config.js          # Configuración Tailwind
-│       ├── 📏 tsconfig.*.json             # Configuración TypeScript
+
+## 🛍️ Características para Clientes│       ├── 📏 tsconfig.*.json             # Configuración TypeScript
+
 │       ├── 🔍 eslint.config.js            # Configuración ESLint
-│       ├── public/                        # Assets públicos
-│       │   ├── universo.png               # Logo/Favicon
-│       │   └── random-image.png           # Imágenes demo
-│       └── src/                           # Código fuente frontend
-│           ├── 🎯 main.tsx                # Entry point + React Query
-│           ├── 📱 App.tsx                 # Componente principal
-│           ├── 🎨 index.css               # Estilos globales
+
+- ✅ Catálogo dinámico con categorías personalizadas│       ├── public/                        # Assets públicos
+
+- ✅ Carrito persistente entre sesiones│       │   ├── universo.png               # Logo/Favicon
+
+- ✅ Sistema de búsqueda y filtros│       │   └── random-image.png           # Imágenes demo
+
+- ✅ Checkout simplificado en 3 pasos│       └── src/                           # Código fuente frontend
+
+- ✅ Registro de usuarios con autocompletado de datos│           ├── 🎯 main.tsx                # Entry point + React Query
+
+- ✅ Historial completo de pedidos│           ├── 📱 App.tsx                 # Componente principal
+
+- ✅ Seguimiento de estados de envío│           ├── 🎨 index.css               # Estilos globales
+
 │           ├── 🧩 components/             # Componentes React
-│           │   ├── 📁 admin/              # 🆕 Componentes Admin Panel
+
+---│           │   ├── 📁 admin/              # 🆕 Componentes Admin Panel
+
 │           │   │   ├── layout/            # Layout componentes admin
-│           │   │   │   ├── AdminHeader.tsx # Header panel admin ✅
+
+## 👨‍💼 Panel de Administración│           │   │   │   ├── AdminHeader.tsx # Header panel admin ✅
+
 │           │   │   │   ├── AdminSidebar.tsx # Sidebar admin ✅
-│           │   │   │   └── index.ts       # Exports layout admin
-│           │   │   ├── pages/             # Páginas admin
-│           │   │   │   ├── AdminPanel.tsx # Dashboard principal ✅
-│           │   │   │   ├── ProductManagement.tsx # Gestión productos ✅
+
+### Dashboard Principal│           │   │   │   └── index.ts       # Exports layout admin
+
+- 📊 Estadísticas en tiempo real│           │   │   ├── pages/             # Páginas admin
+
+- 📈 Gráficos de ventas y productos│           │   │   │   ├── AdminPanel.tsx # Dashboard principal ✅
+
+- 🚨 Alertas de stock bajo y pedidos pendientes│           │   │   │   ├── ProductManagement.tsx # Gestión productos ✅
+
 │           │   │   │   ├── UserManagement.tsx # Gestión usuarios ✅
-│           │   │   │   ├── OrderManagement.tsx # Gestión pedidos 🚧
-│           │   │   │   ├── ReportsAndStats.tsx # Reportes y stats 🚧
-│           │   │   │   ├── SystemSettings.tsx # Config sistema 🚧
-│           │   │   │   └── index.ts       # Exports páginas admin
-│           │   │   ├── ui/                # Componentes UI admin
+
+### Gestión de Productos│           │   │   │   ├── OrderManagement.tsx # Gestión pedidos 🚧
+
+- ➕ Crear, editar, eliminar productos│           │   │   │   ├── ReportsAndStats.tsx # Reportes y stats 🚧
+
+- 🖼️ Carga múltiple de imágenes│           │   │   │   ├── SystemSettings.tsx # Config sistema 🚧
+
+- 📦 Control de inventario en tiempo real│           │   │   │   └── index.ts       # Exports páginas admin
+
+- 🏷️ Organización por categorías│           │   │   ├── ui/                # Componentes UI admin
+
 │           │   │   │   ├── AdminButton.tsx # Botón admin ✅
-│           │   │   │   ├── AdminCard.tsx  # Card admin ✅
-│           │   │   │   ├── AdminTable.tsx # Tabla admin ✅
-│           │   │   │   └── index.ts       # Exports UI admin
-│           │   │   └── index.ts           # Exports admin principales
-│           │   ├── layout/                # Componentes layout
+
+### Gestión de Usuarios│           │   │   │   ├── AdminCard.tsx  # Card admin ✅
+
+- 👥 CRUD completo de usuarios│           │   │   │   ├── AdminTable.tsx # Tabla admin ✅
+
+- 🎭 Sistema de roles (ADMIN/USER)│           │   │   │   └── index.ts       # Exports UI admin
+
+- 🔐 Cambio de permisos│           │   │   └── index.ts           # Exports admin principales
+
+- 📊 Estadísticas de usuarios│           │   ├── layout/                # Componentes layout
+
 │           │   │   ├── Header.tsx         # Navegación + Sidebar
-│           │   │   ├── Footer.tsx         # Footer global
-│           │   │   └── index.ts           # Exports layout
-│           │   ├── pages/                 # Páginas/Vistas
-│           │   │   ├── Home.tsx           # Página inicio ✅
-│           │   │   ├── Login.tsx          # Página login ✅ (con detección admin)
+
+### Gestión de Pedidos│           │   │   ├── Footer.tsx         # Footer global
+
+- 📋 Lista completa con filtros│           │   │   └── index.ts           # Exports layout
+
+- 🔄 Actualización de estados│           │   ├── pages/                 # Páginas/Vistas
+
+- 👤 Información del comprador│           │   │   ├── Home.tsx           # Página inicio ✅
+
+- 📧 Sistema de notificaciones│           │   │   ├── Login.tsx          # Página login ✅ (con detección admin)
+
 │           │   │   ├── Productos.tsx      # Catálogo productos 🚧
-│           │   │   ├── Carrito.tsx        # Carrito compras 🚧
-│           │   │   └── index.ts           # Exports páginas
-│           │   ├── ui/                    # Componentes UI reutilizables
-│           │   │   └── index.ts           # Exports UI (futuro)
-│           │   └── index.ts               # Exports principales
+
+### Editor de Configuración│           │   │   ├── Carrito.tsx        # Carrito compras 🚧
+
+- ⚙️ 7 tabs de configuración completa│           │   │   └── index.ts           # Exports páginas
+
+- 🎨 Editor visual WYSIWYG│           │   ├── ui/                    # Componentes UI reutilizables
+
+- 💾 Guardado automático│           │   │   └── index.ts           # Exports UI (futuro)
+
+- 👁️ Vista previa en tiempo real│           │   └── index.ts               # Exports principales
+
 │           ├── 📝 types/                  # Definiciones TypeScript
-│           │   └── index.ts               # Tipos principales
+
+---│           │   └── index.ts               # Tipos principales
+
 │           ├── 🛠️ utils/                  # Utilidades y helpers
-│           │   └── mockData.ts            # Datos mock desarrollo
+
+## 🛠️ Stack Tecnológico│           │   └── mockData.ts            # Datos mock desarrollo
+
 │           └── 🖼️ assets/                 # Recursos del frontend
-├── 📦 Maven Files
-│   ├── pom.xml                           # Configuración Maven
-│   ├── mvnw                              # Maven Wrapper Unix
-│   ├── mvnw.cmd                          # Maven Wrapper Windows
-│   └── target/                           # Archivos compilados
-└── 📚 Documentación
-    ├── README.md                         # Este archivo
+
+### Backend├── 📦 Maven Files
+
+- ☕ **Java 17** - Lenguaje base│   ├── pom.xml                           # Configuración Maven
+
+- 🍃 **Spring Boot 3.x** - Framework principal│   ├── mvnw                              # Maven Wrapper Unix
+
+- 🔐 **Spring Security + JWT** - Autenticación│   ├── mvnw.cmd                          # Maven Wrapper Windows
+
+- 🗄️ **Spring Data JPA** - ORM│   └── target/                           # Archivos compilados
+
+- 🐬 **MySQL** - Base de datos└── 📚 Documentación
+
+- 📦 **Maven** - Gestión de dependencias    ├── README.md                         # Este archivo
+
     ├── RESUMEN_DESARROLLO.md             # Resumen desarrollo
-    └── HELP.md                           # Ayuda Spring Boot
-```
 
-## ⭐ Características Principales del Sistema
+### Frontend    └── HELP.md                           # Ayuda Spring Boot
 
-### 🔐 Sistema de Autenticación y Usuarios
+- ⚛️ **React 19.1.1** - Biblioteca UI```
+
+- 📘 **TypeScript 5.8.3** - Tipado estático
+
+- ⚡ **Vite 7.1.6** - Build tool## ⭐ Características Principales del Sistema
+
+- 🎨 **Tailwind CSS 4.1.13** - Framework CSS
+
+- 🔄 **TanStack Query 5.90.2** - Data fetching### 🔐 Sistema de Autenticación y Usuarios
+
+- 🧭 **React Router DOM 7.9.2** - Enrutamiento
 
 - **✅ Registro Público de Usuarios**: Cualquier persona puede registrarse en `/register` sin autenticación previa
-- **✅ Login Inteligente**: Detecta automáticamente el rol y redirige a la página correspondiente (Admin → `/admin`, User → `/`)
+
+---- **✅ Login Inteligente**: Detecta automáticamente el rol y redirige a la página correspondiente (Admin → `/admin`, User → `/`)
+
 - **✅ Protección de Rutas**: Componente `AdminRoute` que valida permisos antes de permitir acceso al panel admin
-- **✅ Roles y Permisos**: Sistema de roles (USER/ADMIN) con validación en backend y frontend
+
+## 🏗️ Arquitectura del Proyecto- **✅ Roles y Permisos**: Sistema de roles (USER/ADMIN) con validación en backend y frontend
+
 - **✅ Seguridad Robusta**: Contraseñas encriptadas con BCrypt, tokens JWT, refresh automático
 
-### 🛒 Sistema de Carrito y Pedidos
+```
 
-- **✅ Carrito Persistente**: Vinculado al usuario, se mantiene entre sesiones
-- **✅ Autocompletado de Datos**: Formulario de facturación se completa automáticamente con datos del usuario registrado
-- **✅ Trazabilidad Completa**: Cada pedido vinculado a `idUsuario` para historial y análisis
-- **✅ Gestión de Estados**: Pedidos con estados (PENDIENTE, ENVIADO, ENTREGADO, CANCELADO)
-- **✅ Panel Admin**: Visualización y gestión completa de pedidos con información del comprador
+PR-Ecomeerse-carlosDev-comunity/### 🛒 Sistema de Carrito y Pedidos
 
-### 👥 Panel de Administración
+├── 📁 src/main/java/                    # Backend Spring Boot
 
-- **✅ Gestión de Usuarios**: CRUD completo con búsqueda, filtros y estadísticas
-- **✅ Gestión de Productos**: Crear, editar, eliminar productos con imágenes
-- **✅ Gestión de Categorías**: Organización jerárquica de productos
-- **✅ Gestión de Pedidos**: Ver todos los pedidos, cambiar estados, ver detalles del comprador
-- **✅ Estadísticas en Tiempo Real**: Total de usuarios, productos, pedidos, ventas
+│   └── com/example/E_comeerse/- **✅ Carrito Persistente**: Vinculado al usuario, se mantiene entre sesiones
 
-### 🎨 Experiencia de Usuario
+│       ├── config/                      # Configuraciones- **✅ Autocompletado de Datos**: Formulario de facturación se completa automáticamente con datos del usuario registrado
 
-- **✅ Diseño Moderno**: UI responsive con Tailwind CSS y animaciones GSAP
-- **✅ Navegación Intuitiva**: Menú hamburguesa, búsqueda rápida, filtros por categoría
-- **✅ Carga Optimizada**: Lazy loading de imágenes, caché con TanStack Query
-- **✅ Feedback Visual**: Loaders, mensajes de éxito/error, notificaciones
-- **✅ Accesibilidad**: Diseño responsive móvil/tablet/desktop
+│       ├── controller/                  # Endpoints REST- **✅ Trazabilidad Completa**: Cada pedido vinculado a `idUsuario` para historial y análisis
 
-### 🔧 Arquitectura Técnica
+│       ├── dto/                         # Data Transfer Objects- **✅ Gestión de Estados**: Pedidos con estados (PENDIENTE, ENVIADO, ENTREGADO, CANCELADO)
 
-- **✅ API REST Completa**: Endpoints documentados para todas las operaciones
-- **✅ Validación de Datos**: Backend valida todos los inputs con Spring Validation
-- **✅ Manejo de Errores**: Sistema centralizado de excepciones con mensajes claros
-- **✅ CORS Configurado**: Comunicación segura entre frontend y backend
-- **✅ Base de Datos PostgreSQL**: Hospedada en Neon con esquema completo
+│       ├── model/                       # Entidades JPA- **✅ Panel Admin**: Visualización y gestión completa de pedidos con información del comprador
+
+│       ├── repository/                  # Repositorios
+
+│       ├── security/                    # JWT & Auth### 👥 Panel de Administración
+
+│       └── service/                     # Lógica de negocio
+
+│- **✅ Gestión de Usuarios**: CRUD completo con búsqueda, filtros y estadísticas
+
+├── 📁 src/main/resources/- **✅ Gestión de Productos**: Crear, editar, eliminar productos con imágenes
+
+│   ├── application.properties           # Config backend- **✅ Gestión de Categorías**: Organización jerárquica de productos
+
+│   └── static/front-tiendavirtal/      # Frontend React- **✅ Gestión de Pedidos**: Ver todos los pedidos, cambiar estados, ver detalles del comprador
+
+│       └── src/- **✅ Estadísticas en Tiempo Real**: Total de usuarios, productos, pedidos, ventas
+
+│           ├── api/                     # Clientes HTTP
+
+│           ├── components/              # Componentes React### 🎨 Experiencia de Usuario
+
+│           │   ├── admin/              # Panel admin
+
+│           │   ├── layout/             # Header, Footer- **✅ Diseño Moderno**: UI responsive con Tailwind CSS y animaciones GSAP
+
+│           │   ├── pages/              # Páginas principales- **✅ Navegación Intuitiva**: Menú hamburguesa, búsqueda rápida, filtros por categoría
+
+│           │   └── common/             # Componentes comunes- **✅ Carga Optimizada**: Lazy loading de imágenes, caché con TanStack Query
+
+│           ├── context/                 # React Context API- **✅ Feedback Visual**: Loaders, mensajes de éxito/error, notificaciones
+
+│           ├── hooks/                   # Custom hooks- **✅ Accesibilidad**: Diseño responsive móvil/tablet/desktop
+
+│           └── types/                   # TypeScript types
+
+│### 🔧 Arquitectura Técnica
+
+├── 📁 database/                         # Scripts SQL
+
+├── 📁 uploads/                          # Imágenes de productos- **✅ API REST Completa**: Endpoints documentados para todas las operaciones
+
+└── 📚 Documentación/- **✅ Validación de Datos**: Backend valida todos los inputs con Spring Validation
+
+    ├── README.md                        # Este archivo- **✅ Manejo de Errores**: Sistema centralizado de excepciones con mensajes claros
+
+    ├── README_PROYECTO.md              # Documentación técnica- **✅ CORS Configurado**: Comunicación segura entre frontend y backend
+
+    └── GUIA_USUARIO.md                 # Manual de usuario- **✅ Base de Datos PostgreSQL**: Hospedada en Neon con esquema completo
+
+```
 
 ## 🛠️ Stack Tecnológico Completo
 
+---
+
 ### 🌐 Backend (API REST)
-- **☕ Java 24** - Lenguaje de programación principal
+
+## 📊 API REST Endpoints- **☕ Java 24** - Lenguaje de programación principal
+
 - **🍃 Spring Boot 3.5.5** - Framework principal
-- **🗃️ Spring Data JPA** - ORM y acceso a datos
-- **🔒 Spring Security** - Autenticación y autorización
-- **🔑 JWT (JSON Web Tokens)** - Autenticación stateless
-  - `jjwt-api 0.11.5` - API JWT
+
+### Autenticación- **🗃️ Spring Data JPA** - ORM y acceso a datos
+
+- `POST /api/auth/login` - Iniciar sesión- **🔒 Spring Security** - Autenticación y autorización
+
+- `POST /api/auth/register` - Registro público- **🔑 JWT (JSON Web Tokens)** - Autenticación stateless
+
+- `POST /api/auth/refresh` - Renovar token  - `jjwt-api 0.11.5` - API JWT
+
   - `jjwt-impl 0.11.5` - Implementación JWT
-  - `jjwt-jackson 0.11.5` - Serialización JSON
-- **🐘 PostgreSQL** - Base de datos principal (Neon)
-- **✅ Spring Boot Validation** - Validación de datos
-- **📊 Spring Boot Actuator** - Monitoreo y métricas
-- **☁️ Spring Cloud Config** - Configuración distribuida
+
+### Productos  - `jjwt-jackson 0.11.5` - Serialización JSON
+
+- `GET /api/productos` - Listar productos- **🐘 PostgreSQL** - Base de datos principal (Neon)
+
+- `POST /api/productos` - Crear producto (Admin)- **✅ Spring Boot Validation** - Validación de datos
+
+- `PUT /api/productos/{id}` - Actualizar (Admin)- **📊 Spring Boot Actuator** - Monitoreo y métricas
+
+- `DELETE /api/productos/{id}` - Eliminar (Admin)- **☁️ Spring Cloud Config** - Configuración distribuida
+
 - **🔄 Spring Boot Cache** - Sistema de caché
-- **🔗 OAuth2 Client** - Autenticación externa
-- **🧪 Spring Boot Test** - Framework de testing
-- **📝 Lombok** - Reducir boilerplate de código
-- **🔧 Spring Boot DevTools** - Herramientas desarrollo
-- **📦 Maven** - Gestión de dependencias y build
 
-### ⚛️ Frontend (SPA - Single Page Application)
-- **⚛️ React 19.1.1** - Biblioteca UI principal
-- **📘 TypeScript 5.8.3** - Tipado estático
-- **⚡ Vite 7.1.6** - Build tool y dev server
-- **🎨 Tailwind CSS 4.1.13** - Framework CSS utility-first
+### Usuarios- **🔗 OAuth2 Client** - Autenticación externa
+
+- `GET /api/usuarios` - Listar usuarios (Admin)- **🧪 Spring Boot Test** - Framework de testing
+
+- `POST /api/usuarios` - Crear usuario- **📝 Lombok** - Reducir boilerplate de código
+
+- `PUT /api/usuarios/{id}` - Actualizar- **🔧 Spring Boot DevTools** - Herramientas desarrollo
+
+- `DELETE /api/usuarios/{id}` - Eliminar (Admin)- **📦 Maven** - Gestión de dependencias y build
+
+
+
+### Pedidos### ⚛️ Frontend (SPA - Single Page Application)
+
+- `GET /api/pedidos` - Listar pedidos- **⚛️ React 19.1.1** - Biblioteca UI principal
+
+- `POST /api/pedidos` - Crear pedido- **📘 TypeScript 5.8.3** - Tipado estático
+
+- `GET /api/pedidos/usuario/{id}` - Pedidos de usuario- **⚡ Vite 7.1.6** - Build tool y dev server
+
+- `PUT /api/pedidos/{id}/estado` - Cambiar estado (Admin)- **🎨 Tailwind CSS 4.1.13** - Framework CSS utility-first
+
 - **🔄 TanStack Query 5.90.2** - Data fetching y cache
-- **🧭 React Router DOM 7.9.2** - Enrutamiento SPA
+
+Ver documentación completa en [README_PROYECTO.md](README_PROYECTO.md)- **🧭 React Router DOM 7.9.2** - Enrutamiento SPA
+
 - **🎭 GSAP 3.13.0** - Animaciones avanzadas
-- **🔍 ESLint 9.35.0** - Linting y calidad código
+
+---- **🔍 ESLint 9.35.0** - Linting y calidad código
+
 - **📏 TypeScript ESLint 8.43.0** - Rules específicas TS
-- **⚙️ Globals 16.4.0** - Variables globales
+
+## 💡 Casos de Uso Reales- **⚙️ Globals 16.4.0** - Variables globales
+
 - **🔄 React Hooks ESLint** - Rules para hooks
-- **♻️ React Refresh** - Hot reload desarrollo
 
-## 🚀 Instalación y Configuración Completa
+### Tienda de Gaming- **♻️ React Refresh** - Hot reload desarrollo
 
-### Prerrequisitos
+```javascript
 
-- **Java 24** o superior
-- **Node.js 18** o superior
-- **Maven 3.6** o superior
-- **Git** para control de versiones
-- **PostgreSQL** (o acceso a Neon DB)
+{## 🚀 Instalación y Configuración Completa
+
+  nombreTienda: "GamersHub Pro",
+
+  tipoNegocio: "gaming",### Prerrequisitos
+
+  categorias: [
+
+    { nombre: "Teclados", icono: "⌨️" },- **Java 24** o superior
+
+    { nombre: "Ratones", icono: "🖱️" },- **Node.js 18** o superior
+
+    { nombre: "Headsets", icono: "🎧" }- **Maven 3.6** o superior
+
+  ]- **Git** para control de versiones
+
+}- **PostgreSQL** (o acceso a Neon DB)
+
+```
 
 ### 1. Clonar el Repositorio
 
-```bash
-git clone https://github.com/sn4yber/PR-Ecomeerse-carlosDev-comunity.git
-cd E-comeerse
-```
+### Boutique de Ropa
 
-### 2. Configuración del Backend
+```javascript```bash
 
-#### Variables de Entorno
-El archivo `src/main/resources/application.properties` contiene:
+{git clone https://github.com/sn4yber/PR-Ecomeerse-carlosDev-comunity.git
 
-```properties
+  nombreTienda: "Fashion Boutique",cd E-comeerse
+
+  tipoNegocio: "ropa",```
+
+  categorias: [
+
+    { nombre: "Vestidos", icono: "👗" },### 2. Configuración del Backend
+
+    { nombre: "Zapatos", icono: "👠" },
+
+    { nombre: "Accesorios", icono: "👜" }#### Variables de Entorno
+
+  ]El archivo `src/main/resources/application.properties` contiene:
+
+}
+
+``````properties
+
 # Configuración del servidor
-spring.application.name=E-comeerse
-server.port=8080
 
-# Base de datos PostgreSQL Neon (CONFIGURADA)
-spring.datasource.url=jdbc:postgresql://ep-jolly-leaf-adc61hdy-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
-spring.datasource.username=neondb_owner
-spring.datasource.password=npg_CoH9eFL3WrmT
-spring.datasource.driver-class-name=org.postgresql.Driver
+### Tienda de Tecnologíaspring.application.name=E-comeerse
 
-# JPA/Hibernate
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
+```javascriptserver.port=8080
+
+{
+
+  nombreTienda: "TechMarket Pro",# Base de datos PostgreSQL Neon (CONFIGURADA)
+
+  tipoNegocio: "tecnologia",spring.datasource.url=jdbc:postgresql://ep-jolly-leaf-adc61hdy-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require
+
+  categorias: [spring.datasource.username=neondb_owner
+
+    { nombre: "Laptops", icono: "💻" },spring.datasource.password=npg_CoH9eFL3WrmT
+
+    { nombre: "Smartphones", icono: "📱" },spring.datasource.driver-class-name=org.postgresql.Driver
+
+    { nombre: "Audio", icono: "🎧" }
+
+  ]# JPA/Hibernate
+
+}spring.jpa.hibernate.ddl-auto=update
+
+```spring.jpa.show-sql=true
+
 spring.jpa.properties.hibernate.format_sql=true
-spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 
-# JWT Configuration
+---spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+
+
+## 🔐 Seguridad# JWT Configuration
+
 jwt.secret=bXlTZWNyZXRLZXkxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTA=
-jwt.expiration=86400000
-jwt.refresh-expiration=604800000
-jwt.token-prefix=Bearer 
-jwt.header-string=Authorization
 
-# Cloud y desarrollo
+- ✅ Autenticación JWT con tokens de 24hjwt.expiration=86400000
+
+- ✅ Contraseñas encriptadas con BCryptjwt.refresh-expiration=604800000
+
+- ✅ Validación de roles en backend y frontendjwt.token-prefix=Bearer 
+
+- ✅ Protección CORS configuradajwt.header-string=Authorization
+
+- ✅ Validación de inputs con Bean Validation
+
+- ✅ Prevención de SQL Injection con JPA# Cloud y desarrollo
+
 spring.cloud.config.enabled=false
-management.security.enabled=false
+
+---management.security.enabled=false
+
 spring.scheduling.enable=true
-logging.level.com.example.E_comeerse.security=DEBUG
+
+## 🎓 Aprendizajes del Proyectologging.level.com.example.E_comeerse.security=DEBUG
+
 ```
 
-> ⚠️ **Importante**: En producción, usar variables de entorno para credenciales
+Este proyecto es resultado de:
 
-#### Ejecutar Backend
+- 💪 **Perseverancia** - Superar cada desafío técnico> ⚠️ **Importante**: En producción, usar variables de entorno para credenciales
+
+- 🧠 **Lógica Impecable** - Arquitectura pensada y sólida
+
+- 🎨 **Código Limpio** - Documentado y mantenible#### Ejecutar Backend
+
+- ❤️ **Pasión por el Desarrollo** - Cada línea con propósito
 
 ```bash
-# Compilar y ejecutar
+
+---# Compilar y ejecutar
+
 ./mvnw spring-boot:run
 
+## 🤝 Contribuir
+
 # O usando Maven instalado
-mvn spring-boot:run
 
-# El servidor estará disponible en: http://localhost:8080
-```
+Las contribuciones son bienvenidas! Por favor:mvn spring-boot:run
 
-### 3. Configuración del Frontend
+
+
+1. Fork el proyecto# El servidor estará disponible en: http://localhost:8080
+
+2. Crea una rama (`git checkout -b feature/amazing`)```
+
+3. Commit tus cambios (`git commit -m 'Add amazing feature'`)
+
+4. Push a la rama (`git push origin feature/amazing`)### 3. Configuración del Frontend
+
+5. Abre un Pull Request
 
 #### Instalar Dependencias
 
+---
+
 ```bash
-cd src/main/resources/static/front-tiendavirtal
+
+## 📝 Licenciacd src/main/resources/static/front-tiendavirtal
+
 npm install
-```
 
-#### Ejecutar Frontend en Desarrollo
+Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más detalles.```
 
-```bash
+
+
+---#### Ejecutar Frontend en Desarrollo
+
+
+
+## 🙏 Agradecimientos```bash
+
 # Navegar al directorio del frontend
-cd src/main/resources/static/front-tiendavirtal
-npm run dev
 
-# Servidor de desarrollo disponible en: http://localhost:5173
+Este proyecto fue desarrollado con:cd src/main/resources/static/front-tiendavirtal
+
+- ❤️ **Pasión** por crear software de calidadnpm run dev
+
+- ☕ **Café** para las largas sesiones de código
+
+- 💻 **Dedicación** para lograr la excelencia# Servidor de desarrollo disponible en: http://localhost:5173
+
 ```
+
+---
 
 > 📌 **Importante**: Usar siempre la ruta completa para ejecutar el frontend desde cualquier ubicación
 
+## 📞 Contacto
+
 #### Construir para Producción
 
+¿Preguntas? ¿Sugerencias? ¿Colaboraciones?
+
 ```bash
-npm run build
-```
 
-## 🗃️ Modelo de Base de Datos
+- 📧 Email: [tu-email@ejemplo.com]npm run build
 
-### Entidades Principales
+- 🐙 GitHub: [sn4yber](https://github.com/sn4yber)```
 
-#### 👤 Usuario (`usuarios`)
+
+
+---## 🗃️ Modelo de Base de Datos
+
+
+
+<div align="center">### Entidades Principales
+
+
+
+**Hecho con ❤️, ☕ y mucho 💻**#### 👤 Usuario (`usuarios`)
+
 ```sql
-CREATE TABLE usuarios (
+
+*"El código no es solo instrucciones, es arte y solución de problemas"*CREATE TABLE usuarios (
+
     id_usuario BIGSERIAL PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL,
+
+⭐ Si te gustó este proyecto, dale una estrella!    nombre VARCHAR(50) NOT NULL,
+
     apellido VARCHAR(50) NOT NULL,
-    nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+
+</div>    nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+
     contrasena VARCHAR(255) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     telefono VARCHAR(20),
