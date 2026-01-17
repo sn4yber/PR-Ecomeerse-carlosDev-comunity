@@ -313,17 +313,52 @@ sequenceDiagram
 
 ## Instalación y Configuración
 
+### 🐳 Opción 1: Ejecutar con Docker (Recomendado)
+
+La forma más rápida de ejecutar el backend es usando Docker:
+
+```bash
+# Construir y levantar todos los servicios
+docker-compose up -d --build
+
+# Verificar que están corriendo
+docker-compose ps
+
+# Ver logs
+docker-compose logs -f backend
+```
+
+**URLs disponibles:**
+- Backend API: http://localhost:8080
+- Health Check: http://localhost:8080/actuator/health
+- PostgreSQL: localhost:5432
+
+📖 **Documentación completa**: Ver [DOCKER.md](./DOCKER.md) para instrucciones detalladas.
+
+**Scripts de PowerShell para Windows:**
+```powershell
+.\docker-start.ps1  # Iniciar servicios
+.\docker-stop.ps1   # Detener servicios
+.\docker-logs.ps1   # Ver logs
+.\docker-dev.ps1    # Solo PostgreSQL (para desarrollo local)
+```
+
+---
+
+### ⚙️ Opción 2: Instalación Manual
+
 ### Prerrequisitos del Sistema
 
 Antes de comenzar, asegúrate de tener instalado:
 
 | Herramienta | Versión Mínima | Verificar |
 |-------------|----------------|-----------|
-| Java | 17+ | `java -version` |
+| Java | 21+ | `java -version` |
 | Node.js | 18+ | `node -v` |
 | Maven | 3.8+ | `mvn -v` |
 | MySQL/PostgreSQL | 8.0+ / 14+ | `mysql -V` / `psql -V` |
 | Git | 2.x | `git --version` |
+| Docker (opcional) | 20.10+ | `docker --version` |
 
 ### Paso 1: Clonar el Repositorio
 

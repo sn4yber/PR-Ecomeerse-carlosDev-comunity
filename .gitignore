@@ -31,3 +31,24 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Docker ###
+# No ignorar Dockerfile y docker-compose.yml, pero sí archivos temporales
+docker-compose.override.yml
+.env
+.env.local
+.env.*.local
+!.env.example
+!.env.render
+
+### Uploads ###
+uploads/productos/*
+!uploads/productos/README.md
+
+### Logs ###
+*.log
+logs/
+
+### Render ###
+.render-buildpacks.json
+
