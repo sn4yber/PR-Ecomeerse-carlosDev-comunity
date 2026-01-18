@@ -181,12 +181,9 @@ const CategoriesDropdown: React.FC<{ onCategoryClick: () => void; categorias: an
  * - Responsive design
  * - Animaciones suaves
  * 
- * @param title - Título principal del sitio
- * @param menuItems - Items del menú de navegación
  * @param className - Clases CSS adicionales
  */
 export const Header: React.FC<HeaderProps> = ({ 
-  title, 
   className = "" 
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
