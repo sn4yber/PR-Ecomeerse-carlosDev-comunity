@@ -7,7 +7,7 @@
 
 import { ensureValidToken } from './tokenRefresh';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/api`;
 
 /**
  * Interfaz para el modelo Producto
@@ -92,8 +92,9 @@ export const filesAPI = {
 
     const data = await response.json();
     
+    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
     return {
-      url: `http://localhost:8080${data.url}`,
+      url: `${baseUrl}${data.url}`,
       filename: data.filename,
     };
   },

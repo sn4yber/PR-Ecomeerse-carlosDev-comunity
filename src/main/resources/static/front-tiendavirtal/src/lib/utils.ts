@@ -8,7 +8,8 @@ export function cn(...inputs: ClassValue[]) {
 /**
  * Resuelve la URL de una imagen de producto
  * El backend devuelve URLs como "/uploads/productos/filename.jpg"
- * Vite proxy redirige automáticamente /uploads a http://localhost:8080/uploads
+ * En desarrollo: Vite proxy redirige automáticamente /uploads al backend local
+ * En producción: Se usa la URL completa del backend
  *
  * @param imageUrl - URL de la imagen (puede ser relativa o absoluta)
  * @returns URL de la imagen lista para usar en src o null si no hay imagen
@@ -23,9 +24,14 @@ export function resolveImageUrl(imageUrl?: string | null): string | null {
     return imageUrl;
   }
 
-  // El backend devuelve URLs relativas como "/uploads/productos/filename.jpg"
-  // Vite proxy las redirige automáticamente al backend en http://localhost:8080
-  // Por lo tanto, devolvemos la URL relativa tal cual
+  // En producción, usar la URL del backend desde variable de entorno
+  const apiUrl = import.meta.env.VITE_API_URL;
+  if (apiUrl && apiUrl !== 'http://localhost:8080') {
+    const cleanUrl = imageUrl.startsWith("/") ? imageUrl : `/${imageUrl}`;
+    return `${apiUrl}${cleanUrl}`;
+  }
+
+  // En desarrollo, el backend devuelve URLs relativas que Vite proxy maneja
   const cleanUrl = imageUrl.startsWith("/") ? imageUrl : `/${imageUrl}`;
   return cleanUrl;
 }
