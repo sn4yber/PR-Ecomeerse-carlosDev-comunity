@@ -8,6 +8,7 @@
 import React, { useState } from 'react';
 import { Trash2, Plus, Minus, AlertCircle } from 'lucide-react';
 import type { CartItemProps } from '../../types/cart';
+import { resolveImageUrl } from '../../lib/utils';
 
 /**
  * Componente CartItem
@@ -80,7 +81,7 @@ export const CartItem: React.FC<CartItemProps> = ({
         {/* Imagen del producto */}
         <div className="w-full md:w-32 h-32 flex-shrink-0">
           <img
-            src={item.urlImagen || '/placeholder-product.png'}
+            src={resolveImageUrl(item.urlImagen) || '/placeholder-product.png'}
             alt={item.nombreProducto}
             className="w-full h-full object-cover rounded-md"
             onError={(e) => {
