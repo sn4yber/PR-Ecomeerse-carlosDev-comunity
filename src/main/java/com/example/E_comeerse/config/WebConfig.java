@@ -51,8 +51,8 @@ public class WebConfig implements WebMvcConfigurer {
                     "http://localhost:5173",
                     "http://localhost:4173",
                     "https://pr-ecomeerse-carlosdev-comunity.onrender.com",  // Backend en Render
-                    "https://*.netlify.app",  // Frontend en Netlify
-                    "https://pr-ecomeerse-carlosdev-comunity.netlify.app"  // Tu dominio específico
+                    "https://ecomerseee.netlify.app",  // Frontend en Netlify
+                    "https://*.netlify.app"  // Otros subdominios de Netlify
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
@@ -66,8 +66,8 @@ public class WebConfig implements WebMvcConfigurer {
                     "http://localhost:5173",
                     "http://localhost:4173",
                     "https://pr-ecomeerse-carlosdev-comunity.onrender.com",  // Backend en Render
-                    "https://*.netlify.app",  // Frontend en Netlify
-                    "https://pr-ecomeerse-carlosdev-comunity.netlify.app"  // Tu dominio específico
+                    "https://ecomerseee.netlify.app",  // Frontend en Netlify
+                    "https://*.netlify.app"  // Otros subdominios de Netlify
                 )
                 .allowedMethods("GET", "OPTIONS")
                 .allowedHeaders("*")

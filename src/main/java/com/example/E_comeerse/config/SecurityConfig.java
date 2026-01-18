@@ -111,8 +111,8 @@ public class SecurityConfig {
             "http://localhost:5173", 
             "http://localhost:4173",
             "https://pr-ecomeerse-carlosdev-comunity.onrender.com",  // Backend en Render
-            "https://*.netlify.app",  // Frontend en Netlify (todos los subdominios)
-            "https://pr-ecomeerse-carlosdev-comunity.netlify.app"  // Tu dominio específico de Netlify
+            "https://ecomerseee.netlify.app",  // Frontend en Netlify
+            "https://*.netlify.app"  // Otros subdominios de Netlify
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
