@@ -16,7 +16,7 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 
 # Compilar aplicación (skip tests para build más rápido)
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -Dproject.build.sourceEncoding=UTF-8
 
 # Etapa 2: Runtime con JRE
 FROM eclipse-temurin:21-jre-alpine
