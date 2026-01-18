@@ -13,6 +13,8 @@ export interface LoginProps {
   className?: string;
 }
 
+const API_BASE_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/api`;
+
 export const Login: React.FC<LoginProps> = ({ className = "" }) => {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [contrasena, setContrasena] = useState("");
@@ -20,7 +22,7 @@ export const Login: React.FC<LoginProps> = ({ className = "" }) => {
 
   const loginMutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nombreUsuario, contrasena }),
