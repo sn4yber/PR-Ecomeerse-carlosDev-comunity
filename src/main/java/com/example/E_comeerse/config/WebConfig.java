@@ -46,15 +46,25 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         // CORS para API
         registry.addMapping("/api/**")
-                .allowedOrigins("http://localhost:3000", "http://localhost:5173", "http://localhost:4173")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedOrigins(
+                    "http://localhost:3000",
+                    "http://localhost:5173",
+                    "http://localhost:4173",
+                    "https://pr-ecomeerse-carlosdev-comunity.onrender.com"  // Backend en Render
+                )
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
         
         // CORS para imágenes
         registry.addMapping("/uploads/**")
-                .allowedOrigins("http://localhost:3000", "http://localhost:5173", "http://localhost:4173")
+                .allowedOrigins(
+                    "http://localhost:3000",
+                    "http://localhost:5173",
+                    "http://localhost:4173",
+                    "https://pr-ecomeerse-carlosdev-comunity.onrender.com"  // Backend en Render
+                )
                 .allowedMethods("GET", "OPTIONS")
                 .allowedHeaders("*")
                 .maxAge(3600);
